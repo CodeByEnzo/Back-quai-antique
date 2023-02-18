@@ -1,37 +1,60 @@
 <?php
-
 require_once './models/back/user.manager.php';
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;
-
 use Dotenv\Dotenv;
+
 
 class AuthController
 {
     public $secret;
     public $userManager;
 
-    
 
     public function __construct()
     {
-        require_once './config/cors.php';
         // Charge les variables d'environnement depuis le fichier .env
         $dotenv = Dotenv::createImmutable(__DIR__ . "/../../");
         $dotenv->load();
         // Accède à la variable d'environnement
         $this->secret = $_ENV['SECRET'];
         $this->userManager = new UserManager();
-
+        require './config/cors.php';
     }
 
     public function authenticate()
     {
+        // On interdit toute méthode qui n'est pas POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            echo json_encode(['message' => 'Méthode non autorisée']);
+            exit;
+        }
 
-        require_once './config/cors.php';
+
+        // On vérifie si on reçoit un token
+        if (isset($_SERVER['Authorization'])) {
+            $token = trim($_SERVER['Authorization']);
+        } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+            $token = trim($_SERVER['HTTP_AUTHORIZATION']);
+        } elseif (function_exists('apache_request_headers')) {
+            $requestHeaders = apache_request_headers();
+            if (isset($requestHeaders['Authorization'])) {
+                $token = trim($requestHeaders['Authorization']);
+            }
+        }
+
+        // On vérifie si la chaine commence par "Bearer "
+        if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Token introuvable']);
+            exit;
+        }
+
+        // On extrait le token
+        $token = str_replace('Bearer ', '', $token);
+
         require_once './controllers/back/JWT.controller.php';
-
-        
 
         $jwt = new JWT();
 
@@ -56,6 +79,6 @@ class AuthController
             exit;
         }
 
-        return json_encode($jwt->getPayload($token));
+        echo json_encode($jwt->getPayload($token));
     }
 }
