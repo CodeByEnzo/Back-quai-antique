@@ -79,6 +79,7 @@ class AuthController
             exit;
         }
 
-        echo json_encode($jwt->getPayload($token));
+        echo json_encode(['token' => $token]);
+
     }
 }
