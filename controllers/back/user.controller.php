@@ -26,16 +26,7 @@ class UserController
 
         // Récupérer les informations utilisateur correspondantes à l'email
         $userManager = new UserManager();
-        $tokenData = $authController->authenticate();
         $userData = $userManager->getUserByEmail($email);
-        $userData = array_merge($userData, $tokenData);
-
-        // Retourner le token et les données utilisateur sous forme d'un unique objet JSON
-        $response = array(
-            'token' => $token,
-            'user' => $userData
-        );
-        echo json_encode($response);
+        echo json_encode($userData);
     }
-
 }
