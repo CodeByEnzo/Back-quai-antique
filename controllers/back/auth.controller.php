@@ -2,6 +2,7 @@
 require_once './models/back/user.manager.php';
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;
+
 use Dotenv\Dotenv;
 
 
@@ -19,7 +20,6 @@ class AuthController
         // Accède à la variable d'environnement
         $this->secret = $_ENV['SECRET'];
         $this->userManager = new UserManager();
-        require './config/cors.php';
     }
 
     public function authenticate()
