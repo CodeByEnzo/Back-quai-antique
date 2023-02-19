@@ -4,14 +4,12 @@ require_once "./models/back/user.manager.php";
 require_once "./controllers/back/auth.controller.php";
 require_once "./controllers/back/JWT.controller.php";
 
-
 class UserController
 {
 
     public function getUserInfo()
     {
         require_once './config/cors.php';
-
 
         // Vérifier que l'utilisateur est authentifié
         $authController = new AuthController();
@@ -21,7 +19,6 @@ class UserController
         $headers = getallheaders();
         $token = $headers['Authorization'];
 
-
         // Décoder le token pour obtenir le payload et extraire l'email de l'utilisateur
         $jwt = new JWT();
         $payload = $jwt->getPayload($token);
@@ -29,12 +26,16 @@ class UserController
 
         // Récupérer les informations utilisateur correspondantes à l'email
         $userManager = new UserManager();
+        $tokenData = $authController->authenticate();
         $userData = $userManager->getUserByEmail($email);
+        $userData = array_merge($userData, $tokenData);
 
-        // Ajouter le token à la réponse JSON
-        $userData['token'] = $token;
-
-        // Retourner les informations utilisateur avec le token inclus
-        echo json_encode($userData);
+        // Retourner le token et les données utilisateur sous forme d'un unique objet JSON
+        $response = array(
+            'token' => $token,
+            'user' => $userData
+        );
+        echo json_encode($response);
     }
+
 }
