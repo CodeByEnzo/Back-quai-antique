@@ -44,7 +44,7 @@ try {
                     case "gallerys":
                         $apiController->getGallerys();
                         break;
-                        // REACT******************************
+                        // REACT**********************************
                     case "register":
                         $registrationController->register();
                         break;

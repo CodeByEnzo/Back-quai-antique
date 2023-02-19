@@ -10,14 +10,17 @@ class UserManager extends Model
         $req->execute(array($email));
         $data = $req->fetch(PDO::FETCH_ASSOC);
 
-        $userData = [
-            'id' => $data['client_id'],
-            'email' => $data['email'],
-            'username' => $data['username'],
-            'created_at' => $data['created_at'],
-        ];
-
-        return $userData;
+        if (is_array($data)) {
+            $userData = [
+                'id' => $data['client_id'],
+                'email' => $data['email'],
+                'username' => $data['username'],
+                'created_at' => $data['created_at'],
+            ];
+            return $userData;
+        } else {
+            return null;
+        }
     }
 
 
