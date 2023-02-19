@@ -79,7 +79,6 @@ class AuthController
             exit;
         }
 
-        echo json_encode(['token' => $token]);
 
     }
 }
