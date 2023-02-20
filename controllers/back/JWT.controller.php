@@ -12,8 +12,6 @@ class JWT
      */
     public function generate(array $header, array $payload, string $secret, int $validity = 86400): string
     {
-        require_once './config/cors.php';
-
         if ($validity > 0) {
             $now = new DateTime();
             $expiration = $now->getTimestamp() + $validity;

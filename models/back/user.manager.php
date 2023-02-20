@@ -23,5 +23,12 @@ class UserManager extends Model
         }
     }
 
-
+    public function getUserReservations($userId)
+    {
+        $db = $this->getBdd();
+        $req = $db->prepare('SELECT * FROM reservations WHERE client_id = ?');
+        $req->execute(array($userId));
+        $data = $req->fetchAll(PDO::FETCH_ASSOC);
+        return $data ? $data : [];
+    }
 }

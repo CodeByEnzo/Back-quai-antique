@@ -2,9 +2,7 @@
 require_once './models/back/user.manager.php';
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;
-
 use Dotenv\Dotenv;
-
 
 class AuthController
 {
@@ -24,13 +22,13 @@ class AuthController
 
     public function authenticate()
     {
+        
         // On interdit toute méthode qui n'est pas POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             http_response_code(405);
             echo json_encode(['message' => 'Méthode non autorisée']);
             exit;
         }
-
 
         // On vérifie si on reçoit un token
         if (isset($_SERVER['Authorization'])) {
@@ -43,7 +41,7 @@ class AuthController
                 $token = trim($requestHeaders['Authorization']);
             }
         }
-
+        
         // On vérifie si la chaine commence par "Bearer "
         if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
             http_response_code(400);
