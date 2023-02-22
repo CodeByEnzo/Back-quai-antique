@@ -8,13 +8,11 @@ require_once "controllers/back/admin.controller.php";
 require_once "controllers/back/products.controller.php";
 require_once "controllers/back/gallerys.controller.php";
 require_once "controllers/back/clients.controller.php";
-require_once "controllers/back/registration.controller.php";
 require_once "./controllers/back/Login.controller.php";
 require_once "./controllers/back/user.controller.php";
 
 $UserController = new UserController();
 $LoginController = new LoginController();
-$registrationController = new RegistrationController();
 $apiController = new APIController();
 $adminController = new AdminController();
 $productsController = new ProductsController();
@@ -34,7 +32,7 @@ try {
         switch ($url[0]) {
             case "front":
                 switch ($url[1]) {
-                        // BACK API REST**************************
+                        // REACT**********************************
                     case "products":
                         $apiController->getProducts();
                         break;
@@ -44,9 +42,8 @@ try {
                     case "gallerys":
                         $apiController->getGallerys();
                         break;
-                        // REACT**********************************
                     case "register":
-                        $registrationController->register();
+                        $UserController->register();
                         break;
                     case "userLogin":
                         $LoginController->login();

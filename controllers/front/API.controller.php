@@ -54,6 +54,8 @@ class APIController
                     "gallery_id" => $line['gallery_id'],
                     "gallery_title" => html_entity_decode($line['gallery_title']),
                     "gallery_content" => html_entity_decode($line['gallery_content']),
+
+
                     "gallery_img" => URL . "public/images/" . $line['gallery_img']
                 ];
             }

@@ -22,13 +22,10 @@ class AuthController
 
     public function authenticate()
     {
-        
-        // On interdit toute méthode qui n'est pas POST
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            http_response_code(405);
-            echo json_encode(['message' => 'Méthode non autorisée']);
-            exit;
-        }
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Credentials: true");
 
         // On vérifie si on reçoit un token
         if (isset($_SERVER['Authorization'])) {
