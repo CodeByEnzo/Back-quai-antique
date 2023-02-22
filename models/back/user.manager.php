@@ -31,4 +31,24 @@ class UserManager extends Model
         $data = $req->fetchAll(PDO::FETCH_ASSOC);
         return $data ? $data : [];
     }
+
+    public function registerUser($username, $email, $password)
+    {
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        try {
+            $pdo = $this->getBdd();
+            $stmt = $pdo->prepare("SELECT * FROM clients WHERE email = :email LIMIT 1");
+            $stmt->execute(['email' => $email]);
+            $user = $stmt->fetch();
+            if ($user) {
+                return ['status' => 'error', 'message' => "Cet utilisateur existe déjà"];
+            }
+            $stmt = $pdo->prepare('INSERT INTO clients (username, email, password) VALUES (:username, :email, :password)');
+            $stmt->execute(['username' => $username, 'email' => $email, 'password' => $passwordHash]);
+            return ['status' => 'success'];
+        } catch (PDOException $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+            print_r($e);
+        }
+    }
 }

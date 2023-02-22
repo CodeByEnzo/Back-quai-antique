@@ -30,7 +30,6 @@ class LoginManager extends Model
         if (!$user) {
             return [
                 'status' => 'error',
-                
                 'message' => 'Utilisateur introuvable'
             ];
         }
