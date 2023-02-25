@@ -51,6 +51,9 @@ try {
                     case "authenticate":
                         $UserController->getUserInfo();
                         break;
+                    case "reservation":
+                        $UserController->makeReservation();
+                        break;
                     default:
                         throw new Exception("La page n'éxiste pas");
                 }

@@ -7,7 +7,6 @@ require_once "./controllers/back/JWT.controller.php";
 // Handle users in REACT
 class UserController
 {
-
     public function getUserInfo()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -21,28 +20,28 @@ class UserController
             exit();
         }
 
-        // Vérifier que l'utilisateur est authentifié
+        // Vérify if user is authenticated
         $authController = new AuthController();
         $authController->authenticate();
 
-        // Récupérer le token de l'utilisateur depuis les en-têtes de la requête
+        //Get token's user from headers of query
         $headers = getallheaders();
         $token = $headers['Authorization'];
 
-        // Décoder le token pour obtenir le payload et extraire l'email de l'utilisateur
+        //Decode token to get the payload and extract user's email
         $jwt = new JWT();
         $payload = $jwt->getPayload($token);
         $email = $payload['email'];
 
-        // Récupérer les informations utilisateur correspondantes à l'email
+        // Get user's info matches the email
         $userManager = new UserManager();
         $userData = $userManager->getUserByEmail($email);
 
-        // Récupérer les réservations de l'utilisateur correspondant à son ID
+        // Get user's reservation matches the id
         $userId = $userData['id'];
         $userReservations = $userManager->getUserReservations($userId);
 
-        // Combiner les données utilisateur et les réservations dans un tableau
+        // Merge user's data and reservation in array
         $userInfo = [
             'user' => $userData,
             'reservations' => $userReservations
@@ -59,6 +58,10 @@ class UserController
         header("Access-Control-Allow-Credentials: true");
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
+
+        // Vérify if user is authenticated
+        $authController = new AuthController();
+        $authController->authenticate();
 
         //Recupère les données
         $data = json_decode(file_get_contents('php://input'), true);
@@ -81,6 +84,30 @@ class UserController
 
         $userManager = new UserManager();
         $result = $userManager->registerUser($username, $email, $password);
+        echo json_encode($result);
+    }
+
+    public function makeReservation(){
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Credentials: true");
+        header("Content-Type: application/json");
+        header('Access-Control-Max-Age: 86400');
+
+
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $date = isset($data['date']) ? $data['date'] : null;
+        $time = isset($data['time']) ? $data['time'] : null;
+        $number_of_people = isset($data['number_of_people']) ? $data['number_of_people'] : null;
+        $comment = isset($data['comment']) ? $data['comment'] : null;
+        $userId = isset($data['userId']) ? $data['userId'] : null;
+
+
+
+        $userManager = new UserManager();
+        $result = $userManager->reservation($date, $time, $number_of_people, $comment, $userId);
         echo json_encode($result);
     }
 }

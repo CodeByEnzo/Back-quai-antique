@@ -11,10 +11,10 @@ class LoginController
         header("Access-Control-Allow-Credentials: true");
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
-        // Récupération des données envoyées par le client
+        // Get data sent by user
         $data = json_decode(file_get_contents('php://input'), true);
 
-        // Vérification de la validité des données envoyées
+        // Verify validity of data sent
         if (!isset($data['email']) || !isset($data['password'])) {
             echo json_encode([
                 'status' => 'error',
@@ -34,12 +34,12 @@ class LoginController
             exit;
         }
 
-        // Tentative de connexion de l'utilisateur
+        // Try to connect user
         $loginManager = new LoginManager();
 
         $result = $loginManager->loginUser($email, $password);
 
-        // Envoi de la réponse au client
+        // Send response to user
         echo json_encode($result);
     }
 }
