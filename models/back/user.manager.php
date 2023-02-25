@@ -3,6 +3,7 @@ require_once "models/Model.php";
 
 class UserManager extends Model
 {
+    
     public function getUserByEmail($email)
     {
         $db = $this->getBdd();
@@ -51,4 +52,23 @@ class UserManager extends Model
             print_r($e);
         }
     }
+
+    public function reservation($date, $time, $number_of_people, $comment, $userId)
+    {
+        $pdo = $this->getBdd();
+        $req = $pdo->prepare("INSERT INTO reservations (date, time, number_of_people, comments, client_id) 
+                          VALUES (:date, :time, :number_of_people, :comments, :client_id)");
+        $req->bindValue(":date", $date, PDO::PARAM_STR);
+        $req->bindValue(":time", $time, PDO::PARAM_STR);
+        $req->bindValue(":number_of_people", $number_of_people, PDO::PARAM_INT);
+        $req->bindValue(":comments", $comment, PDO::PARAM_STR);
+        $req->bindValue(":client_id", $userId, PDO::PARAM_INT);
+
+        if ($req->execute()) {
+            return $this->getBdd()->lastInsertId();
+        } else {
+            throw new Exception("Une erreur est survenue lors de la création de la réservation, veuillez réessayer plus tard.");
+        }
+    }
+
 }
