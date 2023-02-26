@@ -34,6 +34,17 @@
             Ajouter un client
         </button>
     </a>
+    <h3 class="mt-5">Les réservations :</h3>
+    <a class="mt-3 text-decoration-none" href="<?= URL ?>back/reservations/visualisation">
+        <button class="btn btn-warning">
+            Modifier les réservations
+        </button>
+    </a>
+    <a class="mt-3 text-decoration-none" href="<?= URL ?>back/reservations/creation">
+        <button class="btn btn-warning">
+            Ajouter une réservation
+        </button>
+    </a>
 
 
 
