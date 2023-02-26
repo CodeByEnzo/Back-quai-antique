@@ -1,7 +1,7 @@
 <?php
 
 require_once "models/Model.php";
-
+//
 class clientsManager extends Model
 {
     public function getClients()
@@ -31,12 +31,12 @@ class clientsManager extends Model
             $stmt->bindValue(":client_id", $client_id, PDO::PARAM_INT);
             $stmt->execute();
 
-            // Vérifier si l'ID du client existe
+            // Vérify if client id exist
             if ($stmt->rowCount() === 0) {
                 throw new Exception("Aucun client trouvé avec cet ID");
             }
 
-            // Hacher le mot de passe
+            // Hacher password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             $req = "UPDATE clients SET username = :username, email = :email, password = :password
@@ -49,12 +49,12 @@ class clientsManager extends Model
             $stmt->execute();
             $stmt->closeCursor();
         } catch (Exception $e) {
-            // Enregistrer des informations sur l'erreur
+            // save info about error
             error_log($e->getMessage());
 
-            // Notifier les utilisateurs
+            // Notify client
             echo "Une erreur est survenue lors de la mise à jour de l'entrée, veuillez réessayer plus tard.";
-            // ou avec un message d'erreur personnalisé
+            // or with custom message
             echo $e->getMessage();
         }
     }

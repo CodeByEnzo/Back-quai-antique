@@ -1,11 +1,10 @@
 <?php
 
-// Permet de faire la connection à la BDD
+// Connect to database
 // Classe abstraite qui n'est pas instanciable, on peut seulement l'étendre
 abstract class Model
 {
     private static $pdo;
-    //Fonction static qui fait la connection à la BD
     private static function setBdd()
     {
         self::$pdo = new PDO("mysql:host=localhost;dbname=db_quai;charset=utf8", "root", "8!+B4j{wZuR7");
@@ -14,10 +13,10 @@ abstract class Model
         self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
     }
 
-    // appelle la fonction setBdd pour recupérer la connection
+    // call function settBdd to get connexion
     protected function getBdd()
     {
-        //Pour se connecter une seule fois à la BDD
+        // To connect once to database
         if (self::$pdo === null) {
             self::setBdd();
         }

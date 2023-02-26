@@ -1,7 +1,5 @@
 <?php
-//Lance la vérification en base de donnée
 require_once "./models/Model.php";
-
 
 class AdminManager extends Model
 {
@@ -15,7 +13,6 @@ class AdminManager extends Model
         $stmt->closeCursor();
         return $admin['password'];
     }
-
     public function isConnectionValid($login, $password)
     {
         $passwordBD = $this->getPasswordUser($login);
