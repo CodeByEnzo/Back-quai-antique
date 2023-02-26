@@ -1,7 +1,5 @@
 <?php
-require_once './controllers/back/JWT.controller.php';
-
-
+require_once 'controllers/front/JWT.controller.php';
 
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;

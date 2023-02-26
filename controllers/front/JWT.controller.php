@@ -1,7 +1,6 @@
 <?php
 class JWT
 {
-    
     /**
      * generate JWT
      * @param array $header Header du token
@@ -23,8 +22,7 @@ class JWT
         $base64Header = base64_encode(json_encode($header));
         $base64Payload = base64_encode(json_encode($payload));
 
-        // Clean up values
-        // Replace +, / and =
+        // Clean up values replacing +, / and =
         $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], $base64Header);
         $base64Payload = str_replace(['+', '/', '='], ['-', '_', ''], $base64Payload);
 

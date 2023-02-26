@@ -1,5 +1,5 @@
 <?php
-require_once "./models/Model.php";
+require_once "models/Model.php";
 
 class AdminManager extends Model
 {
