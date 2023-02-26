@@ -1,8 +1,8 @@
 <?php
 
-require_once "./models/back/user.manager.php";
-require_once "./controllers/back/auth.controller.php";
-require_once "./controllers/back/JWT.controller.php";
+require_once "models/front/user.manager.php";
+require_once "controllers/front/auth.controller.php";
+require_once "controllers/front/JWT.controller.php";
 
 // Handle users in REACT
 class UserController
@@ -59,9 +59,6 @@ class UserController
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
 
-        // Vérify if user is authenticated
-        $authController = new AuthController();
-        $authController->authenticate();
 
         //Recupère les données
         $data = json_decode(file_get_contents('php://input'), true);
@@ -87,7 +84,8 @@ class UserController
         echo json_encode($result);
     }
 
-    public function makeReservation(){
+    public function makeReservation()
+    {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
         header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
@@ -123,5 +121,4 @@ class UserController
         $result = $userManager->DeleteReservation($userId, $reservation_id);
         echo json_encode($result);
     }
-
 }

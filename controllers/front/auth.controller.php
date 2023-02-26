@@ -1,5 +1,5 @@
 <?php
-require_once './models/back/user.manager.php';
+require_once 'models/front/user.manager.php';
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;
 use Dotenv\Dotenv;
@@ -49,7 +49,7 @@ class AuthController
         // Exctract token
         $token = str_replace('Bearer ', '', $token);
 
-        require_once './controllers/back/JWT.controller.php';
+        require_once 'controllers/front/JWT.controller.php';
 
         $jwt = new JWT();
 

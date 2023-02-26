@@ -8,9 +8,9 @@ require_once "controllers/back/admin.controller.php";
 require_once "controllers/back/products.controller.php";
 require_once "controllers/back/gallerys.controller.php";
 require_once "controllers/back/clients.controller.php";
-require_once "./controllers/back/Login.controller.php";
-require_once "./controllers/back/user.controller.php";
-require_once "./controllers/back/reservations.controller.php";
+require_once "controllers/front/Login.controller.php";
+require_once "controllers/front/user.controller.php";
+require_once "controllers/back/reservations.controller.php";
 
 $UserController = new UserController();
 $reservationsController = new reservationsController();

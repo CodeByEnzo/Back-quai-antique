@@ -1,8 +1,9 @@
 <?php
 
-require_once "./controllers/back/Security.class.php";
-require_once "./models/back/reservations.manager.php";
-require_once "./controllers/back/utile.php";
+require_once "controllers/back/Security.class.php";
+
+require_once "models/back/reservations.manager.php";
+require_once "controllers/back/utile.php";
 
 class reservationsController
 {

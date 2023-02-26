@@ -1,5 +1,5 @@
 <?php
-require './models/back/Login.manager.php';
+require 'models/front/Login.manager.php';
 
 class LoginController
 {
