@@ -63,30 +63,6 @@ class APIController
         return $tab;
     }
 
-    //***********************************************************
-    // API controller pour afficher les clients******************
-    public function getClients()
-    {
-        $clients = $this->apiManager->getDBClient();
-        Model::sendJSON($this->formatDataClientsLine($clients));
-    }
-    private function formatDataClientsLine($lines)
-    {
-        $tab = [];
-        foreach ($lines as $line) {
-            if (!array_key_exists($line['client_id'], $tab)) {
-                $tab[$line['client_id']] = [
-                    "client_id" => $line['client_id'],
-                    "username" => html_entity_decode($line['username']),
-                    "email" => html_entity_decode($line['email']),
-                    "password" => html_entity_decode($line['password'])
-                ];
-            }
-        }
-        return $tab;
-    }
-
-
     //*****************************************************************************
     //Permet de recevoir les messages de la page de contact************************
     //Le Mail arrive dans les spams, test à réaliser avec une adresse du domaine **
@@ -113,10 +89,10 @@ class APIController
                 'to' => "enzocapi@hotmail.com"
             ];
 
-            //envoie du retour pour indiqué que c'est traité
+            //Send success return
             echo json_encode($messageReturn);
         } else {
-            // Message vide
+            // Message empty
             echo json_encode(['error' => 'Message vide']);
         }
     }

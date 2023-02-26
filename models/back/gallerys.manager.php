@@ -31,7 +31,7 @@ class gallerysManager extends Model
             $stmt->execute();
             $gallery = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // si un nouveau fichier a été téléchargé, on utilise la fonction ajoutImage() pour gérer l'upload
+            // If a new file have been upload, Use ajoutImage() to handle it
             if (!empty($file['name'])) {
                 $dir = "public/images/";
                 $gallery_img = ajoutImage($file, $dir);
@@ -52,12 +52,10 @@ class gallerysManager extends Model
             $stmt->execute();
             $stmt->closeCursor();
         } catch (Exception $e) {
-            // Enregistrer des informations sur l'erreur
+            // Save info about error
             error_log($e->getMessage());
 
-            // Notifier les utilisateurs
             echo "Une erreur est survenue lors de la mise à jour de l'entrée, veuillez réessayer plus tard.";
-            // ou avec un message d'erreur personnalisé
             echo $e->getMessage();
         }
     }

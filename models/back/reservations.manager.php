@@ -31,8 +31,6 @@ class reservationsManager extends Model
             $stmt->execute();
             $reservation = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-
             $req = "UPDATE reservations 
                 SET reservation_id = :reservation_id, client_id = :client_id, date = :date, comments = :comments
                 WHERE reservation_id= :reservation_id";
@@ -45,12 +43,8 @@ class reservationsManager extends Model
             $stmt->execute();
             $stmt->closeCursor();
         } catch (Exception $e) {
-            // Enregistrer des informations sur l'erreur
             error_log($e->getMessage());
-
-            // Notifier les utilisateurs
             echo "Une erreur est survenue lors de la mise à jour de l'entrée, veuillez réessayer plus tard.";
-            // ou avec un message d'erreur personnalisé
             echo $e->getMessage();
         }
     }

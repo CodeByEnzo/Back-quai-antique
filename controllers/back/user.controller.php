@@ -95,16 +95,12 @@ class UserController
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
 
-
-
         $data = json_decode(file_get_contents('php://input'), true);
         $date = isset($data['date']) ? $data['date'] : null;
         $time = isset($data['time']) ? $data['time'] : null;
         $number_of_people = isset($data['number_of_people']) ? $data['number_of_people'] : null;
         $comment = isset($data['comment']) ? $data['comment'] : null;
         $userId = isset($data['userId']) ? $data['userId'] : null;
-
-
 
         $userManager = new UserManager();
         $result = $userManager->reservation($date, $time, $number_of_people, $comment, $userId);
@@ -119,12 +115,9 @@ class UserController
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
 
-
-
         $data = json_decode(file_get_contents('php://input'), true);
         $userId = isset($data['userId']) ? $data['userId'] : null;
         $reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
-
 
         $userManager = new UserManager();
         $result = $userManager->DeleteReservation($userId, $reservation_id);

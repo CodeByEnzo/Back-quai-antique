@@ -1,5 +1,5 @@
 <?php
-// permet de verifier le formulaire et de verifier que l'utilisateur dispose des accés administrateur pour accéder aux différentes page
+// Verify form and if user has administrator access to let him access of rest application
 class security
 {
     public static function secureHTML($string)

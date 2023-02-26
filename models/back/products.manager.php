@@ -41,12 +41,8 @@ class ProductsManager extends Model
                 throw new Exception("Les valeurs fournies pour la mise à jour de produit ne sont pas valides");
             
         } catch (Exception $e) {
-            // Enregistrer des informations sur l'erreur
             error_log($e->getMessage());
-
-            // Notifier les utilisateurs
             echo "Une erreur est survenue lors de la mise à jour de l'entrée, veuillez réessayer plus tard.";
-            // ou avec un message d'erreur personnalisé
             echo $e->getMessage();
         }
     }

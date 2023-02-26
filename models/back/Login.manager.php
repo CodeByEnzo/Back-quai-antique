@@ -13,13 +13,10 @@ class LoginManager extends Model
     
     public function __construct()
     {
-        // Charge les variables d'environnement depuis le fichier .env
+        // Load variables environement fot .env file
         $dotenv = Dotenv::createImmutable(__DIR__ . "/../../");
         $dotenv->load();
-        // Accéde à la variable d'environnement
         $this->secret = $_ENV['SECRET'];
-        
-        // echo base64_encode($this->secret);
     }
     
     public function loginUser(string $email, string $password)
