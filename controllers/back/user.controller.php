@@ -110,4 +110,25 @@ class UserController
         $result = $userManager->reservation($date, $time, $number_of_people, $comment, $userId);
         echo json_encode($result);
     }
+    public function DeleteReservation()
+    {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Credentials: true");
+        header("Content-Type: application/json");
+        header('Access-Control-Max-Age: 86400');
+
+
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $userId = isset($data['userId']) ? $data['userId'] : null;
+        $reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
+
+
+        $userManager = new UserManager();
+        $result = $userManager->DeleteReservation($userId, $reservation_id);
+        echo json_encode($result);
+    }
+
 }

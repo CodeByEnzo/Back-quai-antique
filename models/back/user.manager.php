@@ -65,9 +65,23 @@ class UserManager extends Model
         $req->bindValue(":client_id", $userId, PDO::PARAM_INT);
 
         if ($req->execute()) {
-            return $this->getBdd()->lastInsertId();
+            return ['status' => 'success'];
         } else {
-            throw new Exception("Une erreur est survenue lors de la création de la réservation, veuillez réessayer plus tard.");
+            throw new Exception("Une erreur est survenue lors de la réservation, veuillez réessayer plus tard.");
+        }
+    }
+    public function DeleteReservation($userId, $reservation_id)
+    {
+        $req = "DELETE FROM reservations WHERE client_id= :client_id AND reservation_id = :reservation_id";
+        $stmt = $this->getBdd()->prepare($req);
+        $stmt->bindValue(":client_id", $userId, PDO::PARAM_INT);
+        $stmt->bindValue(":reservation_id", $reservation_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $stmt->closeCursor();
+        if ($stmt->execute()) {
+            return ['status' => 'success'];
+        } else {
+            throw new Exception("Une erreur est survenue lors de l'annulation de la réservation, veuillez réessayer plus tard.");
         }
     }
 

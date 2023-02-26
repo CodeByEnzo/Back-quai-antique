@@ -10,8 +10,10 @@ require_once "controllers/back/gallerys.controller.php";
 require_once "controllers/back/clients.controller.php";
 require_once "./controllers/back/Login.controller.php";
 require_once "./controllers/back/user.controller.php";
+require_once "./controllers/back/reservations.controller.php";
 
 $UserController = new UserController();
+$reservationsController = new reservationsController();
 $LoginController = new LoginController();
 $apiController = new APIController();
 $adminController = new AdminController();
@@ -53,6 +55,9 @@ try {
                         break;
                     case "reservation":
                         $UserController->makeReservation();
+                        break;
+                    case "cancelReservation":
+                        $UserController->DeleteReservation();
                         break;
                     default:
                         throw new Exception("La page n'éxiste pas");
@@ -130,6 +135,27 @@ try {
                                 break;
                             case "creationValidation":
                                 $clientsController->creationValidation();
+                                break;
+                            default:
+                                throw new Exception("La page n'existe pas");
+                        }
+                        break;
+                    case "reservations":
+                        switch ($url[2]) {
+                            case "visualisation":
+                                $reservationsController->visualisation();
+                                break;
+                            case "validationModification":
+                                $reservationsController->modification();
+                                break;
+                            case "validationDelete":
+                                $reservationsController->delete();
+                                break;
+                            case "creation":
+                                $reservationsController->creationTemplate();
+                                break;
+                            case "creationValidation":
+                                $reservationsController->creationValidation();
                                 break;
                             default:
                                 throw new Exception("La page n'existe pas");
