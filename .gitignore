@@ -19,4 +19,4 @@ coverage/
 test-results/
 
 # Ignorer le fichier de connexion a la bdd
-/Model.php
+Model.php
