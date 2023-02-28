@@ -19,5 +19,5 @@
 
 <?php
 $content = ob_get_clean();
-$title = "Page d'administration de la gallerie";
+$title = "Ajouter un photo à la gallerie";
 require "views/commons/template.php";

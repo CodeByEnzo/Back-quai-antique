@@ -74,7 +74,7 @@ class reservationsController
     public function creationTemplate()
     {
         if (security::verifAccessSession()) {
-            require_once "views/reservationCreation.view.php";
+            require_once "views/reservationCreation.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }
@@ -83,20 +83,20 @@ class reservationsController
     public function creationValidation()
     {
         if (security::verifAccessSession()) {
-            $reservation_id = security::secureHTML($_POST['reservation_title']);
             $client_id = security::secureHTML($_POST['client_id']);
-            $date = "";
-            $time = "";
-            $comments = "";
+            $date = security::secureHTML($_POST['date']);
+            $time = security::secureHTML($_POST['time']);
+            $number_of_people = security::secureHTML($_POST['number_of_people']);
+            $comments = security::secureHTML($_POST['comment']);
 
-            $reservation_id =  $this->reservationsManager->createReservation($reservation_id, $client_id, $date, $time, $comments);
+            $reservation_id =  $this->reservationsManager->createReservation($client_id, $date, $time, $number_of_people, $comments);
 
             $_SESSION['alert'] = [
                 "message" => "Le plat à été créé avec l'identifiant :" . $reservation_id,
                 "type" => "alert-success"
             ];
-            header("Location: " . URL . "back/reservations/visualisation");
-            // var_dump($_POST);
+            // header("Location: " . URL . "back/reservations/visualisation");
+            var_dump($_POST);
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }
