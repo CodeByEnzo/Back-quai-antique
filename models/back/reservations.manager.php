@@ -49,7 +49,7 @@ class reservationsManager extends Model
         }
     }
 
-    public function createReservation( $client_id, $date, $time,$number_of_people, $comments)
+    public function createReservation($client_id, $date, $time, $number_of_people, $comments)
     {
         $this->getBdd()->setAttribute(PDO::MYSQL_ATTR_INIT_COMMAND, "SET NAMES utf8mb4");
         $req = "INSERT INTO reservations (client_id, date, time, number_of_people, comments)
