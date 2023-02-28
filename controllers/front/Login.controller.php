@@ -14,7 +14,7 @@ class LoginController
         // Get data sent by user
         $data = json_decode(file_get_contents('php://input'), true);
 
-        // Verify validity of data sent
+        // Verify if data is sent
         if (!isset($data['email']) || !isset($data['password'])) {
             echo json_encode([
                 'status' => 'error',

@@ -13,6 +13,7 @@ class AdminManager extends Model
         $stmt->closeCursor();
         return $admin['password'];
     }
+    // Verify if post password match with pasword in database, return bool
     public function isConnectionValid($login, $password)
     {
         $passwordBD = $this->getPasswordUser($login);
