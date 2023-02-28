@@ -1,0 +1,22 @@
+# Ignorer les fichiers générés par l'environnement de développement
+node_modules/
+build/
+*.log
+
+# Ignorer les fichiers de configuration locaux
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.vscode/
+
+# Ignorer les fichiers de sauvegarde des éditeurs de texte
+*~
+*.swp
+
+# Ignorer les fichiers de sortie des tests et des rapports de couverture
+coverage/
+test-results/
+
+# Ignorer le fichier de connexion a la bdd
+/Model.php
