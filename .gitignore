@@ -14,6 +14,7 @@ build/
 *~
 *.swp
 
+
 # Ignorer les fichiers de sortie des tests et des rapports de couverture
 coverage/
 test-results/
