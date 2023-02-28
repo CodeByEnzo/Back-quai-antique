@@ -40,5 +40,13 @@ class APIManager extends Model
         $stmt->closeCursor();
         return $reservation;
     }
-
+    public function getDBHours()
+    {
+        $req = "SELECT * FROM opening_hours";
+        $stmt = $this->getBdd()->prepare($req);
+        $stmt->execute();
+        $opening_hours = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $opening_hours;
+    }
 }

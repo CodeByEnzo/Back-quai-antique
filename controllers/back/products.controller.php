@@ -1,8 +1,8 @@
 <?php
 
-require_once "./controllers/back/Security.class.php";
-require_once "./models/back/products.manager.php";
-require_once "./controllers/back/utile.php";
+require_once "controllers/back/Security.class.php";
+require_once "models/back/products.manager.php";
+require_once "controllers/back/utile.php";
 
 class productsController
 {
