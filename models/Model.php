@@ -1,4 +1,6 @@
 <?php
+//TEST 3
+
 // Connect to database
 // Classe abstraite qui n'est pas instanciable, on peut seulement l'étendre
 abstract class Model
