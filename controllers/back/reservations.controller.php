@@ -95,8 +95,8 @@ class reservationsController
                 "message" => "Le plat à été créé avec l'identifiant :" . $reservation_id,
                 "type" => "alert-success"
             ];
-            // header("Location: " . URL . "back/reservations/visualisation");
-            var_dump($_POST);
+            header("Location: " . URL . "back/reservations/visualisation");
+            // var_dump($_POST);
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }

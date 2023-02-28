@@ -11,7 +11,9 @@ require_once "controllers/back/clients.controller.php";
 require_once "controllers/front/Login.controller.php";
 require_once "controllers/front/user.controller.php";
 require_once "controllers/back/reservations.controller.php";
+require_once "controllers/back/hours.controller.php";
 
+$hoursController = new hoursController();
 $UserController = new UserController();
 $reservationsController = new reservationsController();
 $LoginController = new LoginController();
@@ -37,6 +39,9 @@ try {
                         // REACT**********************************
                     case "products":
                         $apiController->getProducts();
+                        break;
+                    case "hours":
+                        $apiController->getHours();
                         break;
                     case "sendMessage":
                         $apiController->sendMessage();
@@ -156,6 +161,18 @@ try {
                                 break;
                             case "creationValidation":
                                 $reservationsController->creationValidation();
+                                break;
+                            default:
+                                throw new Exception("La page n'existe pas");
+                        }
+                        break;
+                    case "hours":
+                        switch ($url[2]) {
+                            case "visualisation":
+                                $hoursController->visualisation();
+                                break;
+                            case "validationModification":
+                                $hoursController->modification();
                                 break;
                             default:
                                 throw new Exception("La page n'existe pas");
