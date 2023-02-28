@@ -31,5 +31,14 @@ class APIManager extends Model
         $stmt->closeCursor();
         return $clients;
     }
+    public function getDBReservation()
+    {
+        $req = "SELECT * FROM reservations";
+        $stmt = $this->getBdd()->prepare($req);
+        $stmt->execute();
+        $reservation = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $reservation;
+    }
 
 }

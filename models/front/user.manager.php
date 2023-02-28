@@ -57,7 +57,7 @@ class UserManager extends Model
     {
         $pdo = $this->getBdd();
         $req = $pdo->prepare("INSERT INTO reservations (date, time, number_of_people, comments, client_id) 
-                          VALUES (:date, :time, :number_of_people, :comments, :client_id)");
+                          VALUES (:date, :time, :number_of_people, :comment, :client_id)");
         $req->bindValue(":date", $date, PDO::PARAM_STR);
         $req->bindValue(":time", $time, PDO::PARAM_STR);
         $req->bindValue(":number_of_people", $number_of_people, PDO::PARAM_INT);
