@@ -45,7 +45,12 @@
             Ajouter une réservation
         </button>
     </a>
-
+    <h3 class="mt-5">Les horraires d'ouverture :</h3>
+    <a class="mt-3 text-decoration-none" href="<?= URL ?>back/hours/visualisation">
+        <button class="btn btn-warning">
+            Modifier les horraires
+        </button>
+    </a>
 
 
 </main>

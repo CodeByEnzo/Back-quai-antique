@@ -6,10 +6,10 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav text-center">
+            <ul class="navbar-nav text-center me-auto">
                 <?php if (!security::verifAccessSession()) : ?>
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="<?= URL ?>back/login">Login</a>
+                        <a class="nav-link active me-0" aria-current="page" href="<?= URL ?>back/login">Login</a>
                     </li>
                 <?php else : ?>
                     <li class="nav-item">
@@ -59,12 +59,13 @@
                             <li><a class="dropdown-item" href="<?= URL ?>back/hours/visualisation">Modifier</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= URL ?>back/logout">Log out</a>
-                    </li>
-
-                <?php endif; ?>
             </ul>
+            <span class="nav-item text-light text-center me-5">
+                <a class="nav-link" href="<?= URL ?>back/logout">Log out</a>
+            </span>
+
+
+        <?php endif; ?>
         </div>
     </div>
 </nav>
