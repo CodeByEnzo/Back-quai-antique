@@ -17,8 +17,12 @@
                 <form method="POST" action="<?= URL ?>back/hours/validationModification">
                     <tr>
                         <td><?= $hour['id'] ?></td>
-                        <td><?= $hour['day_of_week'] ?></td>
-                        <td><input type="hidden" name="day_of_week" class="form-control" value="<?= $hour['day_of_week'] ?>" /></td>
+                        <td>
+                            <?= $hour['day_of_week'] ?>
+                            <!-- input is hidden because we cannot change a day of the week -->
+                            <input type="hidden" name="day_of_week" class="form-control" value="<?= $hour['day_of_week'] ?>" />
+                        </td>
+
                         <td><input type="text" name="lunch_opening_time" class="form-control" value="<?= $hour['lunch_opening_time'] ?>" /></td>
                         <td><input type="text" name="lunch_closing_time" class="form-control" value="<?= $hour['lunch_closing_time'] ?>" /></td>
                         <td><input type="text" name="dinner_opening_time" class="form-control" value="<?= $hour['dinner_opening_time'] ?>" /></td>
