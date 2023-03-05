@@ -38,8 +38,8 @@ class UserController
         $userData = $userManager->getUserByEmail($email);
 
         // Get user's reservation matches the id
-        $userId = $userData['id'];
-        $userReservations = $userManager->getUserReservations($userId);
+        $client_id = $userData['id'];
+        $userReservations = $userManager->getUserReservations($client_id);
 
         // Merge user's data and reservation in array
         $userInfo = [
@@ -98,10 +98,10 @@ class UserController
         $time = isset($data['time']) ? $data['time'] : null;
         $number_of_people = isset($data['number_of_people']) ? $data['number_of_people'] : null;
         $comment = isset($data['comment']) ? $data['comment'] : null;
-        $userId = isset($data['userId']) ? $data['userId'] : null;
+        $client_id = isset($data['client_id']) ? $data['client_id'] : null;
 
         $userManager = new UserManager();
-        $result = $userManager->reservation($date, $time, $number_of_people, $comment, $userId);
+        $result = $userManager->reservation($date, $time, $number_of_people, $comment, $client_id);
         echo json_encode($result);
     }
     public function DeleteReservation()
@@ -114,11 +114,32 @@ class UserController
         header('Access-Control-Max-Age: 86400');
 
         $data = json_decode(file_get_contents('php://input'), true);
-        $userId = isset($data['userId']) ? $data['userId'] : null;
+        $client_id = isset($data['client_id']) ? $data['client_id'] : null;
         $reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
 
         $userManager = new UserManager();
-        $result = $userManager->DeleteReservation($userId, $reservation_id);
+        $result = $userManager->DeleteReservation($client_id, $reservation_id);
+        echo json_encode($result);
+    }
+    public function UpdateReservation()
+    {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Credentials: true");
+        header("Content-Type: application/json");
+        header('Access-Control-Max-Age: 86400');
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $client_id = isset($data['client_id']) ? $data['client_id'] : null;
+        $reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
+        $date = isset($data['date']) ? $data['date'] : null;
+        $time = isset($data['time']) ? $data['time'] : null;
+        $number_of_people = isset($data['number_of_people']) ? $data['number_of_people'] : null;
+        $comment = isset($data['comment']) ? $data['comment'] : null;
+
+        $userManager = new UserManager();
+        $result = $userManager->UpdateReservation($client_id, $reservation_id, $date, $time, $number_of_people, $comment);
         echo json_encode($result);
     }
 }

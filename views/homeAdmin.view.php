@@ -1,6 +1,5 @@
 <?php ob_start(); ?>
 <main class="container-fluid">
-    <h2 class="mt-5 text-center">Sommaire de l'administration</h2>
     <h3 class="mt-5">La carte du restaurant :</h3>
     <a class="mt-3 text-decoration-none" href="<?= URL ?>back/products/visualisation">
         <button class="btn btn-warning">
