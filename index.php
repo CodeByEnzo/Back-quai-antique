@@ -64,6 +64,9 @@ try {
                     case "cancelReservation":
                         $UserController->DeleteReservation();
                         break;
+                    case "updateReservation":
+                        $UserController->UpdateReservation();
+                        break;
                     default:
                         throw new Exception("La page n'éxiste pas");
                 }

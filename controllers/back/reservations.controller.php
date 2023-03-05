@@ -16,7 +16,7 @@ class reservationsController
     public function visualisation()
     {
         if (security::verifAccessSession()) {
-            $reservations = $this->reservationsManager->getreservations();
+            $reservations = $this->reservationsManager->getReservations();
             // print_r($reservations);
             require_once "views/reservationsVisualisation.php";
         } else {
@@ -31,7 +31,7 @@ class reservationsController
                 "type" => "alert-success"
             ];
 
-            $this->reservationsManager->deleteDBreservation((int) security::secureHTML($_POST['reservation_id']));
+            $this->reservationsManager->deleteDBReservation((int) security::secureHTML($_POST['reservation_id']));
             header('Location: ' . URL . 'back/reservations/visualisation');
         } else {
             throw new Exception("Vous n'avez pas les droits.");
@@ -59,7 +59,7 @@ class reservationsController
             } else if (!$reservation_id || !$client_id) {
                 throw new Exception("Les données envoyées sont incorrectes : client_id ne peut pas être vide.");
             } else {
-                $this->reservationsManager->updatereservation($reservation_id, $client_id, $date, $time, $comments);
+                $this->reservationsManager->updateReservation($reservation_id, $client_id, $date, $time, $comments);
                 $_SESSION['alert'] = [
                     "message" => "La réservation à bien été modifiée",
                     "type" => "alert-success"

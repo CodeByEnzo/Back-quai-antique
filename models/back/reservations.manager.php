@@ -4,7 +4,7 @@ require_once "models/Model.php";
 
 class reservationsManager extends Model
 {
-    public function getreservations()
+    public function getReservations()
     {
         $req = "SELECT * from reservations";
         $stmt = $this->getBdd()->prepare($req);
@@ -13,7 +13,7 @@ class reservationsManager extends Model
         $stmt->closeCursor();
         return $reservations;
     }
-    public function deleteDBreservation($reservation_id)
+    public function deleteDBReservation($reservation_id)
     {
         $req = "DELETE FROM reservations WHERE reservation_id= :reservation_id";
         $stmt = $this->getBdd()->prepare($req);
@@ -22,7 +22,7 @@ class reservationsManager extends Model
         $stmt->closeCursor();
     }
 
-    public function updatereservation($reservation_id, $client_id, $date, $time, $comments)
+    public function updateReservation($reservation_id, $client_id, $date, $time, $comments)
     {
         try {
             $req = "SELECT * FROM reservations WHERE reservation_id = :reservation_id";
