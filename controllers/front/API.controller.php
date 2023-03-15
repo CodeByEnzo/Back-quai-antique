@@ -88,6 +88,30 @@ class APIController
         return $tab;
     }
 
+    //************************************************************************
+    //API controller pour afficher les horraires du restaurant*********************
+    public function getCompanyInfo()
+    {
+        $companyInfo = $this->apiManager->getDBCompanyInfo();
+        Model::sendJSON($this->formatDataCompanyInfoLine($companyInfo));
+    }
+    private function formatDataCompanyInfoLine($lines)
+    {
+        $tab = [];
+        foreach ($lines as $line) {
+            if (!array_key_exists($line['id'], $tab)) {
+                $tab[$line['id']] = [
+                    "id" => $line['id'],
+                    "name" => html_entity_decode($line['name']),
+                    "adress" => html_entity_decode($line['adress']),
+                    "phone" => html_entity_decode($line['phone']),
+                    "email" => html_entity_decode($line['email'])
+                ];
+            }
+        }
+        return $tab;
+    }
+
     //*****************************************************************************
     //Permet de recevoir les messages de la page de contact************************
     //Le Mail arrive dans les spams, test à réaliser avec une adresse du domaine **

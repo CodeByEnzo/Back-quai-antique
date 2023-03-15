@@ -9,7 +9,7 @@ class JWT
      * @param int $validity Durée de validité (en secondes)
      * @return string Token
      */
-    public function generate(array $header, array $payload, string $secret, int $validity = 86400): string
+    public function generate(array $header, array $payload, string $secret, int $validity = 43200): string
     {
         if ($validity > 0) {
             $now = new DateTime();
@@ -93,7 +93,7 @@ class JWT
     /**
      * Verify if expired
      * @param string $token Token to verify
-     * @return bool Veirfy ornot
+     * @return bool Verify or not
      */
     public function isExpired(string $token): bool
     {

@@ -12,7 +12,9 @@ require_once "controllers/front/Login.controller.php";
 require_once "controllers/front/user.controller.php";
 require_once "controllers/back/reservations.controller.php";
 require_once "controllers/back/hours.controller.php";
+require_once "controllers/back/companyInfo.controller.php";
 
+$companyInfoController = new companyInfoController;
 $hoursController = new hoursController();
 $UserController = new UserController();
 $reservationsController = new reservationsController();
@@ -37,18 +39,6 @@ try {
             case "front":
                 switch ($url[1]) {
                         // REACT**********************************
-                    case "products":
-                        $apiController->getProducts();
-                        break;
-                    case "hours":
-                        $apiController->getHours();
-                        break;
-                    case "sendMessage":
-                        $apiController->sendMessage();
-                        break;
-                    case "gallerys":
-                        $apiController->getGallerys();
-                        break;
                     case "register":
                         $UserController->register();
                         break;
@@ -57,6 +47,21 @@ try {
                         break;
                     case "authenticate":
                         $UserController->getUserInfo();
+                        break;
+                    case "products":
+                        $apiController->getProducts();
+                        break;
+                    case "companyInfo":
+                        $apiController->getCompanyInfo();
+                        break;
+                    case "hours":
+                        $apiController->getHours();
+                        break;
+                    case "gallerys":
+                        $apiController->getGallerys();
+                        break;
+                    case "sendMessage":
+                        $apiController->sendMessage();
                         break;
                     case "reservation":
                         $UserController->makeReservation();
@@ -176,6 +181,18 @@ try {
                                 break;
                             case "validationModification":
                                 $hoursController->modification();
+                                break;
+                            default:
+                                throw new Exception("La page n'existe pas");
+                        }
+                        break;
+                    case "companyInfo":
+                        switch ($url[2]) {
+                            case "visualisation":
+                                $companyInfoController->visualisation();
+                                break;
+                            case "validationModification":
+                                $companyInfoController->modification();
                                 break;
                             default:
                                 throw new Exception("La page n'existe pas");

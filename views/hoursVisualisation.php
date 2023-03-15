@@ -33,26 +33,34 @@
                             <button class="btn btn-primary" type="submit">Valider</button>
                         </td>
                     </tr>
+
                 </form>
-            <?php else : ?>
-                <tr>
-                    <td><?= $hour['id'] ?></td>
-                    <td><?= $hour['day_of_week'] ?></td>
-                    <td><?= $hour['lunch_opening_time'] ?></td>
-                    <td><?= $hour['lunch_closing_time'] ?></td>
-                    <td><?= $hour['dinner_opening_time'] ?></td>
-                    <td><?= $hour['dinner_closing_time'] ?></td>
-                    <td>
-                        <form method="post" action="">
-                            <input type="hidden" name="id" value="<?= $hour['id'] ?>" />
-                            <button class="btn btn-warning" type="submit">Modifier</button>
-                        </form>
-                    </td>
-                </tr>
-            <?php endif; ?>
-        <?php endforeach; ?>
+                <div class="d-flex justify-content-center align-items-center">
+                    <p class="text-danger">/!\ </p>
+                    <p class="text-alert text-center">   Pour les services fermé, renseignez "FERME" en majuscule et sans guillemets.</p>
+                 
+                    <p class="text-danger">/!\ </p>
+                </p>
+                <?php else : ?>
+                    <tr>
+                        <td><?= $hour['id'] ?></td>
+                        <td><?= $hour['day_of_week'] ?></td>
+                        <td><?= $hour['lunch_opening_time'] ?></td>
+                        <td><?= $hour['lunch_closing_time'] ?></td>
+                        <td><?= $hour['dinner_opening_time'] ?></td>
+                        <td><?= $hour['dinner_closing_time'] ?></td>
+                        <td>
+                            <form method="post" action="">
+                                <input type="hidden" name="id" value="<?= $hour['id'] ?>" />
+                                <button class="btn btn-warning" type="submit">Modifier</button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
     </tbody>
 </table>
+
 <?php
 $content = ob_get_clean();
 $title = "Administration des réservations";

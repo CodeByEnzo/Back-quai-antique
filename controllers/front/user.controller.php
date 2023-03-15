@@ -19,14 +19,13 @@ class UserController
             http_response_code(200);
             exit();
         }
+        //Get token's user from headers of query
+        $headers = getallheaders();
+        $token = $headers['Authorization'];
 
         // Vérify if user is authenticated
         $authController = new AuthController();
         $authController->authenticate();
-
-        //Get token's user from headers of query
-        $headers = getallheaders();
-        $token = $headers['Authorization'];
 
         //Decode token to get the payload and extract user's email
         $jwt = new JWT();
@@ -47,6 +46,20 @@ class UserController
             'reservations' => $userReservations
         ];
 
+        // Verify if user info and reservations were successfully retrieved
+        if (!$userData || !$userReservations) {
+            http_response_code(401);
+            echo json_encode(['message' => 'Impossible de récupérer les informations de l\'utilisateur']);
+            exit;
+        }
+
+        // Merge user's data and reservation in array
+        $userInfo = [
+                'user' => $userData,
+                'reservations' => $userReservations
+            ];
+
+        // Return user's info
         echo json_encode($userInfo);
     }
 

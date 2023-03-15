@@ -49,4 +49,13 @@ class APIManager extends Model
         $stmt->closeCursor();
         return $opening_hours;
     }
+    public function getDBCompanyInfo()
+    {
+        $req = "SELECT * FROM company_info";
+        $stmt = $this->getBdd()->prepare($req);
+        $stmt->execute();
+        $companyInfo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $companyInfo;
+    }
 }

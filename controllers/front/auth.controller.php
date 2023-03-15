@@ -38,41 +38,34 @@ class AuthController
                 $token = trim($requestHeaders['Authorization']);
             }
         }
-        
         // Verify if string start with "Bearer "
         if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
             http_response_code(400);
             echo json_encode(['message' => 'Token introuvable']);
             exit;
         }
-
         // Exctract token
         $token = str_replace('Bearer ', '', $token);
-
         require_once 'controllers/front/JWT.controller.php';
-
         $jwt = new JWT();
-
         // Verify validity
         if (!$jwt->isValid($token)) {
             http_response_code(400);
             echo json_encode(['message' => 'Token invalide']);
             exit;
         }
-
         // Verify signature
         if (!$jwt->check($token, $this->secret)) {
             http_response_code(403);
             echo json_encode(['message' => 'Le token est invalide']);
             exit;
         }
-
         // Verify if expired
         if ($jwt->isExpired($token)) {
             http_response_code(403);
             echo json_encode(['message' => 'Le token a expiré']);
             exit;
         }
-
     }
+
 }
