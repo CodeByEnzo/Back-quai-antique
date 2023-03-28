@@ -11,7 +11,7 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($companyInfo as $compan) : ?>
+        <?php foreach ($companyInfo as $companyInfo) : ?>
             <?php if (isset($_POST['id']) && $_POST['id'] == $companyInfo['id']) : ?>
                 <form method="POST" action="<?= URL ?>back/companyInfo/validationModification">
                     <tr>

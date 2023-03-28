@@ -24,6 +24,28 @@ class UserManager extends Model
         }
     }
 
+    public function UpdateUser($username, $email, $password, $client_id)
+    {
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+        $req = "UPDATE clients 
+        SET username = :username, email = :email, password = :password 
+        WHERE client_id = :client_id";
+        $stmt = $this->getBdd()->prepare($req);
+        $stmt->bindValue(":client_id", $client_id, PDO::PARAM_STR);
+        $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+        $stmt->bindValue(":password", $passwordHash, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $stmt->closeCursor();
+
+        if ($stmt->rowCount() > 0) {
+            return ['status' => 'success'];
+        } else {
+            return ['error' => "Une erreur est survenue lors de la modification de la réservation, veuillez réessayer plus tard."];
+        }
+    }
+
     public function getUserReservations($client_id)
     {
         $db = $this->getBdd();

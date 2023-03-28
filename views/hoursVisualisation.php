@@ -35,12 +35,12 @@
                     </tr>
 
                 </form>
-                <div class="d-flex justify-content-center align-items-center">
+                <div class="d-flex justify-content-center align-items-center border border-danger rounded">
                     <p class="text-danger">/!\ </p>
-                    <p class="text-alert text-center">   Pour les services fermé, renseignez "FERME" en majuscule et sans guillemets.</p>
-                 
+                    <p class="text-alert text-center "> Pour les services fermé, renseignez "FERME" en majuscule et sans guillemets.</p>
+
                     <p class="text-danger">/!\ </p>
-                </p>
+                    </p>
                 <?php else : ?>
                     <tr>
                         <td><?= $hour['id'] ?></td>

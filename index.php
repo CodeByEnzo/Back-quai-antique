@@ -45,6 +45,9 @@ try {
                     case "userLogin":
                         $LoginController->login();
                         break;
+                    case "userUpdateInfo":
+                        $UserController->userUpdateInfo();
+                        break;
                     case "authenticate":
                         $UserController->getUserInfo();
                         break;

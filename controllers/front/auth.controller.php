@@ -40,9 +40,7 @@ class AuthController
         }
         // Verify if string start with "Bearer "
         if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Token introuvable']);
-            exit;
+            return false;
         }
         // Exctract token
         $token = str_replace('Bearer ', '', $token);

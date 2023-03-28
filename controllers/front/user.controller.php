@@ -55,12 +55,46 @@ class UserController
 
         // Merge user's data and reservation in array
         $userInfo = [
-                'user' => $userData,
-                'reservations' => $userReservations
-            ];
+            'user' => $userData,
+            'reservations' => $userReservations
+        ];
 
         // Return user's info
         echo json_encode($userInfo);
+    }
+    public function userUpdateInfo()
+    {
+        require 'config/cors.php';
+
+        //Get token's user from headers of query
+        $headers = getallheaders();
+        $token = $headers['Authorization'];
+
+        // Verify if string start with "Bearer "
+        if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Token introuvable']);
+            exit;
+        }
+
+        // Vérify if user is authenticated
+        $authController = new AuthController();
+        $authController->authenticate();
+
+        //Recupère les données
+        $data = json_decode(file_get_contents('php://input'), true);
+        $client_id = $data['client_id'];
+        $username = $data['username'];
+        $email = $data['email'];
+        $password = $data['password'];
+
+        if ($data) {
+            echo json_encode($data);
+        }
+
+        $userManager = new UserManager();
+        $result = $userManager->UpdateUser($username, $email, $password, $client_id);
+        echo json_encode($result);
     }
 
     public function register()
