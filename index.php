@@ -210,7 +210,7 @@ try {
         }
     }
 } catch (Exception $e) {
-    // ici on vérifie si la page demandée n'existe pas
+    // Check if page doesn't exist
     if ($e->getMessage() === "La page n'éxiste pas" || $e->getMessage() === "La page demandé n'éxiste pas") {
         http_response_code(404);
         include_once "404.php";

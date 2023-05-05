@@ -123,15 +123,27 @@ class APIController
         header("Content-Type: application/json");
 
         //decodage de l'information qui est récupéré de la partie front
-        //decodage de l'information qui est récupéré de la partie front
         $obj = json_decode(file_get_contents('php://input'));
 
         $message = isset($obj->message) ? $obj->message : (isset($obj->content) ? $obj->content : '');
+
         if (!empty($message)) {
             $to = "enzocapi@hotmail.com";
             $subject = "Message du site Le Quai Antique de : " . $obj->name;
-            $headers = "From : " . $obj->email;
-            mail($to, $subject, $message, $headers);
+            $headers = "From : " . $obj->email . "\r\n";
+            $headers .= "Reply-To: " . $obj->email . "\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+            $html_message = "<html><body>";
+            $html_message .= "<h2>Nouveau message de formulaire de contact</h2>";
+            $html_message .= "<p><strong>Nom :</strong> " . $obj->name . "</p>";
+            $html_message .= "<p><strong>Email :</strong> " . $obj->email . "</p>";
+            $html_message .= "<p><strong>Message :</strong></p>";
+            $html_message .= "<p>" . nl2br(htmlspecialchars($message)) . "</p>";
+            $html_message .= "</body></html>";
+
+            mail($to, $subject, $html_message, $headers);
 
             $messageReturn = [
                 'from' => $obj->email,
@@ -145,7 +157,7 @@ class APIController
             echo json_encode(['error' => 'Message vide']);
         }
     }
-
-
-    
 }
+
+
+

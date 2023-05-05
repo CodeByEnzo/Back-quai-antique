@@ -63,7 +63,6 @@
             <th scope="col">Description</th>
             <th scope="col">Prix</th>
             <th scope="col">Catégorie</th>
-            <th scope="col">Image</th>
             <th scope="col" colspan="2">actions</th>
         </tr>
     </thead>
@@ -118,7 +117,6 @@
             <th scope="col">Description</th>
             <th scope="col">Prix</th>
             <th scope="col">Catégorie</th>
-            <th scope="col">Image</th>
             <th scope="col" colspan="2">actions</th>
         </tr>
     </thead>
