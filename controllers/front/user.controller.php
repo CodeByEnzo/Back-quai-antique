@@ -7,54 +7,6 @@ require_once "controllers/front/JWT.controller.php";
 // Handle users in REACT
 class UserController
 {
-    public function getUserInfo()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS' || $_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'POST') {
-            require_once './config/cors.php';
-            http_response_code(200);
-        }
-
-        try {
-            //Get token's user from headers of query
-            $headers = getallheaders();
-            $token = $headers['Authorization'];
-
-            // Vérify if user is authenticated
-            $authController = new AuthController();
-            $authController->authenticate();
-
-            //Decode token to get the payload and extract user's email
-            $jwt = new JWT();
-            $payload = $jwt->getPayload($token);
-            $email = $payload['email'];
-
-            // Get user's info matches the email
-            $userManager = new UserManager();
-            $userData = $userManager->getUserByEmail($email);
-
-            // Get user's reservation matches the id
-            $client_id = $userData['id'];
-            $userReservations = $userManager->getUserReservations($client_id);
-
-            // Verify if user info and reservations were successfully retrieved
-            if (!$userData || !$userReservations) {
-                $this->sendErrorResponse(401, 'Impossible de récupérer les informations de l\'utilisateur');
-            }
-
-            // Merge user's data and reservation in array
-            $userInfo = [
-                'user' => $userData,
-                'reservations' => $userReservations
-            ];
-
-            // Return user's info
-            echo json_encode($userInfo);
-            die();
-        } catch (Exception $e) {
-            $this->sendErrorResponse(500, 'Une erreur s\'est produite lors de la récupération des informations utilisateur. Veuillez réessayer plus tard.');
-        }
-    }
-
     private function sendErrorResponse($code, $message)
     {
         http_response_code($code);
@@ -62,11 +14,69 @@ class UserController
         exit;
     }
 
+    public function getUserInfo()
+    {
+
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Credentials: true");
+        header("Content-Type: application/json");
+        header('Access-Control-Max-Age: 86400');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS' || $_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'POST') {
+            http_response_code(200);
+            try {
+                //Get token's user from headers of query
+                $headers = getallheaders();
+                $token = $headers['Authorization'];
+
+                // Vérify if user is authenticated
+                $authController = new AuthController();
+                $authController->authenticate();
+
+                //Decode token to get the payload and extract user's email
+                $jwt = new JWT();
+                $payload = $jwt->getPayload($token);
+                $email = $payload['email'];
+
+                // Get user's info matches the email
+                $userManager = new UserManager();
+                $userData = $userManager->getUserByEmail($email);
+
+                // Get user's reservation matches the id
+                $client_id = $userData['id'];
+                $userReservations = $userManager->getUserReservations($client_id);
+
+                // Verify if user id were successfully retrieved
+                if (!$client_id) {
+                    $this->sendErrorResponse(401, 'Impossible de récupérer les informations de l\'utilisateur');
+                }
+
+                // Merge user's data and reservation in array
+                $userInfo = [
+                    'user' => $userData,
+                    'reservations' => $userReservations
+                ];
+
+                // Return user's info
+                echo json_encode($userInfo);
+            } catch (Exception $e) {
+                $this->sendErrorResponse(500, 'Une erreur s\'est produite lors de la récupération des informations utilisateur. Veuillez réessayer plus tard.');
+            }
+        }
+    }
+
+
 
     public function userUpdateInfo()
     {
-        require 'config/cors.php';
-
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        header("Access-Control-Allow-Credentials: true");
+        header("Content-Type: application/json");
+        header('Access-Control-Max-Age: 86400');
         //Get token's user from headers of query
         $headers = getallheaders();
         $token = $headers['Authorization'];

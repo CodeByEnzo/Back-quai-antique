@@ -11,6 +11,8 @@ class LoginController
         header("Access-Control-Allow-Credentials: true");
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
+        require_once './config/cors.php';
+
         // Get data sent by user
         $data = json_decode(file_get_contents('php://input'), true);
 

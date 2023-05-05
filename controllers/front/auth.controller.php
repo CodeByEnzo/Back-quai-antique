@@ -31,8 +31,6 @@ class AuthController
             header("Content-Type: application/json");
             header('Access-Control-Max-Age: 86400');
 
-            require_once "./config/cors.php";
-
             // Verify if token is in the request
             if (isset($_SERVER['Authorization'])) {
                 $token = trim($_SERVER['Authorization']);
