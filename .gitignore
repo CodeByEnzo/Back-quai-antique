@@ -20,5 +20,4 @@ coverage/
 test-results/
 
 # Ignorer le fichier de connexion a la bdd
-Model.php
-pdo.php
+models/pdo.php
