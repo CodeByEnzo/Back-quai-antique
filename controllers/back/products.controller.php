@@ -16,7 +16,6 @@ class productsController
     {
         if (security::verifAccessSession()) {
             $products = $this->productsManager->getProducts();
-            // print_r($products);
             require_once "views/productsVisualisation.view.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");

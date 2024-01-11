@@ -4,6 +4,8 @@ require_once "./controllers/back/Security.class.php";
 require_once "./models/back/clients.manager.php";
 require_once "./controllers/back/utile.php";
 
+// **This code is for the CRUD, to manage clients from back end interface**
+
 class clientsController
 {
     private $clientsManager;
@@ -16,7 +18,6 @@ class clientsController
     {
         if (security::verifAccessSession()) {
             $clients = $this->clientsManager->getclients();
-            // print_r($clients);
             require_once "views/clientsVisualisation.view.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");
@@ -42,20 +43,20 @@ class clientsController
         if (
             isset($_POST['client_id']) && !empty($_POST['client_id']) &&
             isset($_POST['username']) && !empty($_POST['username']) &&
-            isset($_POST['email']) && !empty($_POST['email']) &&
-            isset($_POST['password']) && !empty($_POST['password'])
+            isset($_POST['number']) && !empty($_POST['number']) &&
+            isset($_POST['email']) && !empty($_POST['email'])
         ) {
             // var_dump($_POST);
 
             $client_id = intval($_POST['client_id']);
             $username = filter_var($_POST['username']);
+            $number = filter_var($_POST['number']);
             $email = filter_var($_POST['email']);
-            $password = filter_var($_POST['password']);
 
-            $this->clientsManager->updateClient($client_id, $username, $email, $password);
+            $this->clientsManager->updateClient($client_id, $username, $number, $email);
 
             $_SESSION['alert'] = [
-                "message" => "Le plat à été modifié",
+                "message" => "Le client à été modifié",
                 "type" => "alert-success"
             ];
             header("Location: " . URL . "back/clients/visualisation");
@@ -75,10 +76,11 @@ class clientsController
     {
         if (security::verifAccessSession()) {
             $username = security::secureHTML($_POST['username']);
+            $number = security::secureHTML($_POST['number']);
             $email = security::secureHTML($_POST['email']);
             $password = security::secureHTML($_POST['password']);
 
-            $result =  $this->clientsManager->createClient($username, $email, $password);
+            $result =  $this->clientsManager->createClient($username, $number, $email, $password);
 
             if ($result != 0) {
                 $_SESSION['alert'] = [
@@ -93,10 +95,8 @@ class clientsController
                 ];
                 header("Location: " . URL . "back/clients/creation");
             }
-
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }
     }
-
 }

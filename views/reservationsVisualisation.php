@@ -14,11 +14,12 @@
     <tbody>
         <?php foreach ($reservations as $reservation) : ?>
             <?php if (isset($_POST['reservation_id']) && $_POST['reservation_id'] == $reservation['reservation_id']) : ?>
+                <!--Inputs to modify client's reservation-->
                 <form method="POST" action="<?= URL ?>back/reservations/validationModification">
                     <tr>
                         <td><?= $reservation['reservation_id'] ?></td>
                         <td><?= $reservation['client_id'] ?></td>
-                        <!-- Hidden input containes client's ID -->
+                        <!-- Hidden input contains client's ID (cant be changed)-->
                         <input type="hidden" name="client_id" value="<?= $reservation['client_id'] ?>" />
                         <td><input type="text" name="date" class="form-control" value="<?= $reservation['date'] ?>" /></td>
                         <td><input type="text" name="time" class="form-control" value="<?= $reservation['time'] ?>" /></td>

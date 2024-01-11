@@ -13,6 +13,7 @@ class reservationsManager extends Model
         $stmt->closeCursor();
         return $reservations;
     }
+    
     public function deleteDBReservation($reservation_id)
     {
         $req = "DELETE FROM reservations WHERE reservation_id= :reservation_id";

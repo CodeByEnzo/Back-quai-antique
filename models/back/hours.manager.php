@@ -14,7 +14,6 @@ class hoursManager extends Model
         return $hours;
     }
 
-
     public function updateHours($id, $day_of_week, $lunch_opening_time, $lunch_closing_time, $dinner_opening_time, $dinner_closing_time)
     {
         try {

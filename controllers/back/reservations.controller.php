@@ -1,7 +1,6 @@
 <?php
 
 require_once "controllers/back/Security.class.php";
-
 require_once "models/back/reservations.manager.php";
 require_once "controllers/back/utile.php";
 
@@ -27,7 +26,7 @@ class reservationsController
     {
         if (security::verifAccessSession()) {
             $_SESSION['alert'] = [
-                "message" => "Le plat est supprimé",
+                "message" => "La réservation est supprimé",
                 "type" => "alert-success"
             ];
 

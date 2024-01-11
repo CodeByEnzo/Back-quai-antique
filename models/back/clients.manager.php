@@ -23,7 +23,7 @@ class clientsManager extends Model
         $stmt->closeCursor();
     }
 
-    public function updateClient($client_id, $username, $email, $password)
+    public function updateClient($client_id, $username, $number, $email)
     {
         try {
             $req = "SELECT * FROM clients WHERE client_id = :client_id";
@@ -36,16 +36,14 @@ class clientsManager extends Model
                 throw new Exception("Aucun client trouvé avec cet ID");
             }
 
-            // Hacher password
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $req = "UPDATE clients SET username = :username, email = :email, password = :password
+            $req = "UPDATE clients SET username = :username, number = :number, email = :email
             WHERE client_id= :client_id";
             $stmt = $this->getBdd()->prepare($req);
             $stmt->bindValue(":client_id", $client_id, PDO::PARAM_INT);
             $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+            $stmt->bindValue(":number", $number, PDO::PARAM_STR);
             $stmt->bindValue(":email", $email, PDO::PARAM_STR);
-            $stmt->bindValue(":password", $hashedPassword, PDO::PARAM_STR);
             $stmt->execute();
             $stmt->closeCursor();
         } catch (Exception $e) {
@@ -60,7 +58,7 @@ class clientsManager extends Model
     }
 
 
-    public function createClient($username, $email, $password)
+    public function createClient($username, $number, $email, $password)
     {
         if (strlen($password) < 8) {
             throw new Exception("Le mot de passe doit contenir au moins 8 caractères");
@@ -76,10 +74,11 @@ class clientsManager extends Model
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-        $req = "INSERT INTO clients (username, email, password)
-        VALUES (:username, :email, :password)";
+        $req = "INSERT INTO clients (username, number, email, password)
+            VALUES (:username, :number, :email, :password)";
         $stmt = $this->getBdd()->prepare($req);
         $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+        $stmt->bindValue(":number", $number, PDO::PARAM_STR);
         $stmt->bindValue(":email", $email, PDO::PARAM_STR);
         $stmt->bindValue(":password", $hashedPassword, PDO::PARAM_STR);
 

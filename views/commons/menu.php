@@ -5,8 +5,8 @@
         <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav text-center me-auto">
+        <div class="collapse navbar-collapse " id="navbarNav">
+            <ul class="navbar-nav text-center w-100 d-flex align-items-center justify-content-center">
                 <?php if (!security::verifAccessSession()) : ?>
                     <li class="nav-item">
                         <a class="nav-link active me-0" aria-current="page" href="<?= URL ?>back/login">Login</a>
@@ -53,7 +53,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Horraire
+                            Horaire
                         </a>
                         <ul class="dropdown-menu text-center">
                             <li><a class="dropdown-item" href="<?= URL ?>back/hours/visualisation">Modifier</a></li>
@@ -67,9 +67,23 @@
                             <li><a class="dropdown-item" href="<?= URL ?>back/companyInfo/visualisation">Modifier</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Diagnostic Gaby
+                        </a>
+                        <ul class="dropdown-menu text-center">
+                            <li><a class="dropdown-item" href="<?= URL ?>back/diag/visualisation">Modifier</a></li>
+                            <li><a class="dropdown-item" href="<?= URL ?>back/diag/creation">Ajouter</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" href="<?= URL ?>back/logout">Log out</a>
+
+
+                    </li>
             </ul>
             <span class="nav-item text-light text-center me-5">
-                <a class="nav-link" href="<?= URL ?>back/logout">Log out</a>
+
             </span>
 
 

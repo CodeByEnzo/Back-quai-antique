@@ -3,10 +3,10 @@ class JWT
 {
     /**
      * generate JWT
-     * @param array $header Header du token
-     * @param array $payload Payload du Token
-     * @param string $secret Clé secrète
-     * @param int $validity Durée de validité (en secondes)
+     * @param array $header Header's token
+     * @param array $payload Payload's token'
+     * @param string $secret Secret key
+     * @param int $validity Validity's token (seconds)
      * @return string Token
      */
     public function generate(array $header, array $payload, string $secret, int $validity = 43200): string
@@ -22,11 +22,11 @@ class JWT
         $base64Header = base64_encode(json_encode($header));
         $base64Payload = base64_encode(json_encode($payload));
 
-        // Clean up values replacing +, / and =
+        // Clean up values by replacing +, / and =
         $base64Header = str_replace(['+', '/', '='], ['-', '_', ''], $base64Header);
         $base64Payload = str_replace(['+', '/', '='], ['-', '_', ''], $base64Payload);
 
-        // Generate the signature
+        // Generate signature
         $secret = base64_encode($secret);
         $signature = hash_hmac('sha256', $base64Header . '.' . $base64Payload, $secret, true);
 
@@ -43,7 +43,7 @@ class JWT
     /**
      * Verify Token
      * @param string $token Token to verify
-     * @param string $secret secret key
+     * @param string $secret Secret key
      * @return bool Verify or not
      */
     public function check(string $token, string $secret): bool

@@ -13,6 +13,7 @@ require_once "controllers/front/user.controller.php";
 require_once "controllers/back/reservations.controller.php";
 require_once "controllers/back/hours.controller.php";
 require_once "controllers/back/companyInfo.controller.php";
+require_once "controllers/back/diag.controller.php";
 
 $companyInfoController = new companyInfoController;
 $hoursController = new hoursController();
@@ -24,6 +25,7 @@ $adminController = new AdminController();
 $productsController = new ProductsController();
 $gallerysController = new GallerysController();
 $clientsController = new clientsController();
+$diagController = new diagController();
 
 try {
     if (empty($_GET['page'])) {
@@ -74,6 +76,10 @@ try {
                         break;
                     case "updateReservation":
                         $UserController->UpdateReservation();
+                        break;
+                        //Gaby-------------------------------------------
+                    case "getDiagData":
+                        $diagController->getDiagData();
                         break;
                     default:
                         throw new Exception("La page n'éxiste pas");
@@ -196,6 +202,27 @@ try {
                                 break;
                             case "validationModification":
                                 $companyInfoController->modification();
+                                break;
+                            default:
+                                throw new Exception("La page n'existe pas");
+                        }
+                        break;
+                    case "diag":
+                        switch ($url[2]) {
+                            case "visualisation":
+                                $diagController->visualisation();
+                                break;
+                            case "validationModification":
+                                $diagController->modification();
+                                break;
+                            case "creation":
+                                $diagController->creationTemplate();
+                                break;
+                            case "creationValidation":
+                                $diagController->creationValidation();
+                                break;
+                            case "validationDelete":
+                                $diagController->delete();
                                 break;
                             default:
                                 throw new Exception("La page n'existe pas");

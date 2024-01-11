@@ -63,6 +63,6 @@
 
 <?php
 $content = ob_get_clean();
-$title = "Administration des réservations";
+$title = "Administration des horaires";
 require "views/commons/template.php";
 ?>

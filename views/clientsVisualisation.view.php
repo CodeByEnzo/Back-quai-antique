@@ -1,16 +1,16 @@
 <?php ob_start(); ?>
 
-<table class="table">
+<table class="table border-dark text-center mt-5">
     <thead>
-        <tr>
-            <th scope="col">#ID</th>
-            <th scope="col">Client</th>
-            <th scope="col">Email</th>
-            <th scope="col">Mot de passe</th>
-            <th scope="col" colspan="2">actions</th>
+        <tr class="text-center bg-light rounded">
+            <th class="bg-info-subtle" scope="col">#ID</th>
+            <th class="bg-primary-subtle" scope="col">Client</th>
+            <th class="bg-info-subtle" scope="col">Email</th>
+            <th class="bg-primary-subtle" scope="col">Numéro</th>
+            <th class="bg-info-subtle" scope="col" colspan="2">actions</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="bg-light">
         <?php foreach ($clients as $client) : ?>
             <?php if (isset($_POST['client_id']) && $_POST['client_id'] == $client['client_id']) : ?>
                 <form method="post" action="<?= URL ?>back/clients/validationModification">
@@ -18,26 +18,26 @@
                         <td><?= $client['client_id'] ?></td>
                         <td><input type="text" name="username" class="form-control" value="<?= $client['username'] ?>" /></td>
                         <td><input type="text" name='email' class="form-control" rows="3" value="<?= $client['email'] ?>" /></td>
-                        <td><input type="text" name='password' class="form-control" rows="3" value="<?= $client['password'] ?>" /></td>
+                        <td><input type="text" name='number' class="form-control" rows="3" value="<?= $client['number'] ?>" /></td>
                         <input type="hidden" name="client_id" value="<?= $client['client_id'] ?>" />
                         <td colspan="2">
-                            <button class="btn btn-primary" type="submit">Valider</button>
+                            <button class="btn btn-success" type="submit">Valider</button>
                         </td>
                     </tr>
                 </form>
             <?php else : ?>
                 <tr>
-                    <td><?= $client['client_id'] ?></td>
-                    <td><?= $client['username'] ?></td>
-                    <td><?= $client['email'] ?></td>
-                    <td><?= $client['password'] ?></td>
-                    <td>
+                    <td class="bg-primary-subtle"><?= $client['client_id'] ?></td>
+                    <td class="bg-info-subtle"><?= $client['username'] ?></td>
+                    <td class="bg-primary-subtle"><?= $client['email'] ?></td>
+                    <td class="bg-info-subtle"><?= $client['number'] ?></td>
+                    <td class="bg-primary-subtle">
                         <form method="post" action="">
                             <input type="hidden" name="client_id" value="<?= $client['client_id'] ?>" />
                             <button class="btn btn-warning" type="submit">Modifier</button>
                         </form>
                     </td>
-                    <td>
+                    <td class="bg-primary-subtle">
                         <form method="post" action="<?= URL ?>back/clients/validationDelete" onSubmit="return confirm('Voulez-vous vraiment supprimer ?');">
                             <input type="hidden" name="client_id" value="<?= $client['client_id'] ?>" />
                             <button class="btn btn-danger" type="submit">Supprimer</button>

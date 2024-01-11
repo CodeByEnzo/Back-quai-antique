@@ -5,15 +5,9 @@ class LoginController
 {
     public function login()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
-        require_once './config/cors.php';
+        require "./config/cors.php";
 
-        // Get data sent by user
+        // Get datas
         $data = json_decode(file_get_contents('php://input'), true);
 
         // Verify if data is sent

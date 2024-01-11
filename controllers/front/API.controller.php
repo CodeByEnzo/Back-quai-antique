@@ -13,8 +13,8 @@ class APIController
         $this->apiManager = new APIManager();
     }
 
-    //************************************************************************
-    //API controller pour afficher la carte du restaurant*********************
+    //*************************************************************
+    //API controller to show restaurant's menu*********************
     public function getProducts()
     {
         $products = $this->apiManager->getDBproducts();
@@ -39,7 +39,7 @@ class APIController
     }
 
     //*******************************************************************
-    // API controller pour afficher les photos en page d'accueil*********
+    // API controller to display pictures on home page*******************
     public function getGallerys()
     {
         $gallerys = $this->apiManager->getDBGallery();
@@ -64,27 +64,17 @@ class APIController
     }
 
     //************************************************************************
-    //API controller pour afficher les horraires du restaurant*********************
+    //API controller to show open hours of restaurant*************************
     public function getHours()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
         $hours = $this->apiManager->getDBHours();
         Model::sendJSON($this->formatDataHoursLine($hours));
     }
     private function formatDataHoursLine($lines)
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
         $tab = [];
         foreach ($lines as $line) {
             if (!array_key_exists($line['id'], $tab)) {
@@ -102,15 +92,10 @@ class APIController
     }
 
     //************************************************************************
-    //API controller pour afficher les horraires du restaurant*********************
+    //API controller to show infos about restaurant***************************
     public function getCompanyInfo()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
         $companyInfo = $this->apiManager->getDBCompanyInfo();
         Model::sendJSON($this->formatDataCompanyInfoLine($companyInfo));
@@ -133,16 +118,11 @@ class APIController
     }
 
     //*****************************************************************************
-    //Permet de recevoir les messages de la page de contact************************
-    //Le Mail arrive dans les spams, test à réaliser avec une adresse du domaine **
+    //To get messages from contact page********************************************
+    //Mail is going to spam, have to be fix ***************************************
     public function sendMessage()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
         //decodage de l'information qui est récupéré de la partie front
         $obj = json_decode(file_get_contents('php://input'));

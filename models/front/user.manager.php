@@ -16,6 +16,7 @@ class UserManager extends Model
                 'id' => $data['client_id'],
                 'email' => $data['email'],
                 'username' => $data['username'],
+                'number' => $data['number'],
                 'created_at' => $data['created_at'],
             ];
             return $userData;
@@ -24,26 +25,45 @@ class UserManager extends Model
         }
     }
 
-    public function UpdateUser($username, $email, $password, $client_id)
+    public function UpdateUser($username, $number, $email, $password, $client_id)
     {
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-        $req = "UPDATE clients 
-        SET username = :username, email = :email, password = :password 
-        WHERE client_id = :client_id";
-        $stmt = $this->getBdd()->prepare($req);
-        $stmt->bindValue(":client_id", $client_id, PDO::PARAM_STR);
-        $stmt->bindValue(":username", $username, PDO::PARAM_STR);
-        $stmt->bindValue(":email", $email, PDO::PARAM_STR);
-        $stmt->bindValue(":password", $passwordHash, PDO::PARAM_STR);
-        $stmt->execute();
-
-        $stmt->closeCursor();
-
-        if ($stmt->rowCount() > 0) {
-            return ['status' => 'success'];
+        // Validation des données
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $response = ['status' => 'error', 'message' => 'Adresse email invalide'];
         } else {
-            return ['error' => "Une erreur est survenue lors de la modification de la réservation, veuillez réessayer plus tard."];
+            $db = $this->getBdd();
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+            // Préparation de la requête
+            $stmt = $db->prepare("UPDATE clients 
+            SET username = :username, number = :number, email = :email, password = :password 
+            WHERE client_id = :client_id");
+
+            if ($stmt) {
+                $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+                $stmt->bindValue(":number", $number, PDO::PARAM_STR);
+                $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+                $stmt->bindValue(":password", $passwordHash, PDO::PARAM_STR);
+                $stmt->bindValue(":client_id", $client_id, PDO::PARAM_STR);
+
+                if ($stmt->execute()) {
+                    if ($stmt->rowCount() > 0) {
+                        // La mise à jour a réussi
+                        return true;
+                    } else {
+                        // Aucun enregistrement mis à jour
+                        return false;
+                    }
+                } else {
+                    // La mise à jour a échoué
+                    return false;
+                }
+            }
         }
+
+        // Convertir la réponse en JSON
+        header("Content-Type: application/json");
+        echo json_encode($response);
     }
 
     public function getUserReservations($client_id)
@@ -55,7 +75,7 @@ class UserManager extends Model
         return $data ? $data : [];
     }
 
-    public function registerUser($username, $email, $password)
+    public function registerUser($username, $number, $email, $password)
     {
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
         try {
@@ -66,8 +86,8 @@ class UserManager extends Model
             if ($user) {
                 return ['status' => 'error', 'message' => "Cet utilisateur existe déjà"];
             }
-            $stmt = $pdo->prepare('INSERT INTO clients (username, email, password) VALUES (:username, :email, :password)');
-            $stmt->execute(['username' => $username, 'email' => $email, 'password' => $passwordHash]);
+            $stmt = $pdo->prepare('INSERT INTO clients (username, number, email, password) VALUES (:username, :number, :email, :password)');
+            $stmt->execute(['username' => $username, 'email' => $email, 'number' => $number, 'password' => $passwordHash]);
             return ['status' => 'success'];
         } catch (PDOException $e) {
             return ['status' => 'error', 'message' => $e->getMessage()];
@@ -92,6 +112,7 @@ class UserManager extends Model
             throw new Exception("Une erreur est survenue lors de la réservation, veuillez réessayer plus tard.");
         }
     }
+
     public function DeleteReservation($client_id, $reservation_id)
     {
         $req = "DELETE FROM reservations WHERE client_id= :client_id AND reservation_id = :reservation_id";
@@ -106,6 +127,7 @@ class UserManager extends Model
             throw new Exception("Une erreur est survenue lors de l'annulation de la réservation, veuillez réessayer plus tard.");
         }
     }
+    
     public function UpdateReservation($client_id, $reservation_id, $date, $time, $number_of_people, $comments)
     {
         $req = "UPDATE reservations 

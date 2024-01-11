@@ -4,6 +4,9 @@ require_once "models/front/user.manager.php";
 require_once "controllers/front/auth.controller.php";
 require_once "controllers/front/JWT.controller.php";
 
+// **User signifies the users from React app, do not get confuse with "clients" that can be handle from back end interface**
+// **So this code does response to requests from REACT**
+
 // Handle users in REACT
 class UserController
 {
@@ -16,140 +19,127 @@ class UserController
 
     public function getUserInfo()
     {
+        require "./config/cors.php";
 
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
-
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS' || $_SERVER['REQUEST_METHOD'] === 'GET' || $_SERVER['REQUEST_METHOD'] === 'POST') {
-            http_response_code(200);
-            try {
-                //Get token's user from headers of query
-                $headers = getallheaders();
-                $token = $headers['Authorization'];
-
-                // Vérify if user is authenticated
-                $authController = new AuthController();
-                $authController->authenticate();
-
-                //Decode token to get the payload and extract user's email
-                $jwt = new JWT();
-                $payload = $jwt->getPayload($token);
-                $email = $payload['email'];
-
-                // Get user's info matches the email
-                $userManager = new UserManager();
-                $userData = $userManager->getUserByEmail($email);
-
-                // Get user's reservation matches the id
-                $client_id = $userData['id'];
-                $userReservations = $userManager->getUserReservations($client_id);
-
-                // Verify if user id were successfully retrieved
-                if (!$client_id) {
-                    $this->sendErrorResponse(401, 'Impossible de récupérer les informations de l\'utilisateur');
-                }
-
-                // Merge user's data and reservation in array
-                $userInfo = [
-                    'user' => $userData,
-                    'reservations' => $userReservations
-                ];
-
-                // Return user's info
-                echo json_encode($userInfo);
-            } catch (Exception $e) {
-                $this->sendErrorResponse(500, 'Une erreur s\'est produite lors de la récupération des informations utilisateur. Veuillez réessayer plus tard.');
-            }
-        }
-    }
-
-
-
-    public function userUpdateInfo()
-    {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
         //Get token's user from headers of query
         $headers = getallheaders();
         $token = $headers['Authorization'];
 
-        // Verify if string start with "Bearer "
-        if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
-            http_response_code(400);
-            echo json_encode(['message' => 'Token introuvable']);
-            exit;
-        }
-
-        // Vérify if user is authenticated
+        // Verify if user is authenticated
         $authController = new AuthController();
         $authController->authenticate();
 
-        //Recupère les données
-        $data = json_decode(file_get_contents('php://input'), true);
-        $client_id = $data['client_id'];
-        $username = $data['username'];
-        $email = $data['email'];
-        $password = $data['password'];
+        //Decode token to get the payload and extract user's email
+        $jwt = new JWT();
+        $payload = $jwt->getPayload($token);
+        $email = $payload['email'];
 
-        if ($data) {
-            echo json_encode($data);
+        // Get user's info matches the email
+        $userManager = new UserManager();
+        $userData = $userManager->getUserByEmail($email);
+
+        // Get user's reservation matches the id
+        $client_id = $userData['id'];
+        $userReservations = $userManager->getUserReservations($client_id);
+
+        // Verify if user id were successfully retrieved
+        if (!$client_id) {
+            $this->sendErrorResponse(401, 'Impossible de récupérer les informations de l\'utilisateur');
+            exit;
+        }
+        $client_number = $userData['number'];
+
+        // Merge user's data and reservation in array
+        $userInfo = [
+            'user' => $userData,
+            'reservations' => $userReservations,
+        ];
+
+        // Return user's info
+        echo json_encode($userInfo);
+    }
+
+    public function userUpdateInfo()
+    {
+        require "./config/cors.php";
+        // Get Token from headers
+        $headers = getallheaders();
+        $token = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+
+        // Check Token
+        if (!isset($token) || !preg_match('/^Bearer\s(\S+)/', $token, $matches)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Token introuvable']);
+        }
+
+        // Check authentication
+        $authController = new AuthController();
+        $authController->authenticate();
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $client_id = $data['client_id'] ?? null;
+        $email = $data['email'] ?? null;
+        $number = $data['number'] ?? null;
+        $password = $data['password'] ?? null;
+        $username = $data['username'] ?? null;
+
+        if (empty($client_id) || empty($email) || empty($number) || empty($password) || empty($username)) {
+            http_response_code(400);
+            echo json_encode(['status' => 'error', 'message' => 'Données incorrectes']);
         }
 
         $userManager = new UserManager();
-        $result = $userManager->UpdateUser($username, $email, $password, $client_id);
-        echo json_encode($result);
+        $updateResult = $userManager->UpdateUser($username, $number, $email, $password, $client_id);
+
+        if ($updateResult) {
+            $response = [
+                'status' => 'success',
+                'message' => 'Mise à jour du profil réussie.',
+                'client_id' => $client_id,
+                'email' => $email,
+                'number' => $number,
+                'username' => $username
+            ];
+        } else {
+            http_response_code(500);
+            $response = ['status' => 'error', 'message' => 'La mise à jour du profil a échoué.'];
+        }
+        header("Content-Type: application/json");
+        echo json_encode($response);
     }
+
 
     public function register()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
-
-        //Recupère les données
         $data = json_decode(file_get_contents('php://input'), true);
+
+        if (json_last_error() != JSON_ERROR_NONE) {
+            throw new Exception('Erreur lors de la lecture des données JSON');
+        }
+
         $username = $data['username'];
+        $number = $data['number'];
         $email = $data['email'];
         $password = $data['password'];
 
-        if (empty($username) || empty($email) || empty($password)) {
-            echo json_encode(['status' => 'error', 'message' => "Tous les champs sont requis"]);
-            exit;
+        if (empty($username) || empty($number) || empty($email) || empty($password)) {
+            throw new Exception('Tous les champs sont requis');
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            echo json_encode(['status' => 'error', 'message' => "Email est invalide"]);
-            exit;
-        }
-        if (strlen($password) < 8) {
-            echo json_encode(['status' => 'error', 'message' => "Le mot de passe doit contenir au moins 8 caractères"]);
-            exit;
+            throw new Exception('Email est invalide');
         }
 
         $userManager = new UserManager();
-        $result = $userManager->registerUser($username, $email, $password);
+        $result = $userManager->registerUser($username, $number, $email, $password);
         echo json_encode($result);
     }
 
+
     public function makeReservation()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
         $data = json_decode(file_get_contents('php://input'), true);
         $date = isset($data['date']) ? $data['date'] : null;
@@ -162,14 +152,10 @@ class UserController
         $result = $userManager->reservation($date, $time, $number_of_people, $comment, $client_id);
         echo json_encode($result);
     }
+
     public function DeleteReservation()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
         $data = json_decode(file_get_contents('php://input'), true);
         $client_id = isset($data['client_id']) ? $data['client_id'] : null;
@@ -181,12 +167,7 @@ class UserController
     }
     public function UpdateReservation()
     {
-        header("Access-Control-Allow-Origin: *");
-        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-        header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        header("Access-Control-Allow-Credentials: true");
-        header("Content-Type: application/json");
-        header('Access-Control-Max-Age: 86400');
+        require "./config/cors.php";
 
         $data = json_decode(file_get_contents('php://input'), true);
         $client_id = isset($data['client_id']) ? $data['client_id'] : null;

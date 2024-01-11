@@ -52,15 +52,11 @@ class gallerysManager extends Model
             $stmt->execute();
             $stmt->closeCursor();
         } catch (Exception $e) {
-            // Save info about error
             error_log($e->getMessage());
-
             echo "Une erreur est survenue lors de la mise à jour de l'entrée, veuillez réessayer plus tard.";
             echo $e->getMessage();
         }
     }
-
-
 
     public function createGallery($gallery_title, $gallery_content, $gallery_img)
     {
