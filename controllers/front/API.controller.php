@@ -2,6 +2,7 @@
 
 require_once "models/front/API.manager.php";
 require_once "models/Model.php";
+require_once "controllers/front/TokenPW.php";
 
 class APIController
 {
@@ -159,4 +160,5 @@ class APIController
             echo json_encode(['error' => 'Message vide']);
         }
     }
+
 }

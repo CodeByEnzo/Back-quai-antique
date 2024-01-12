@@ -127,7 +127,7 @@ class UserManager extends Model
             throw new Exception("Une erreur est survenue lors de l'annulation de la réservation, veuillez réessayer plus tard.");
         }
     }
-    
+
     public function UpdateReservation($client_id, $reservation_id, $date, $time, $number_of_people, $comments)
     {
         $req = "UPDATE reservations 
@@ -151,4 +151,31 @@ class UserManager extends Model
             return ['error' => "Une erreur est survenue lors de la modification de la réservation, veuillez réessayer plus tard."];
         }
     }
+
+    public function isEmailValid($email)
+    {
+        try {
+            // Check email
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                return false;
+            }
+
+            $req = "SELECT email FROM clients WHERE email = :email";
+            $stmt = $this->getBdd()->prepare($req);
+            $stmt->bindValue(":email", $email, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            $count = $stmt->fetchColumn();
+
+            $stmt->closeCursor();
+
+            return $count > 0;
+        } catch (PDOException $e) {
+            // Log ou gestion de l'erreur
+            error_log("Erreur lors de la vérification de l'e-mail : " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

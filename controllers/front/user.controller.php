@@ -3,6 +3,7 @@
 require_once "models/front/user.manager.php";
 require_once "controllers/front/auth.controller.php";
 require_once "controllers/front/JWT.controller.php";
+require_once "controllers/front/TokenPW.php";
 
 // **User signifies the users from React app, do not get confuse with "clients" that can be handle from back end interface**
 // **So this code does response to requests from REACT**
@@ -140,7 +141,6 @@ class UserController
     public function makeReservation()
     {
         require "./config/cors.php";
-
         $data = json_decode(file_get_contents('php://input'), true);
         $date = isset($data['date']) ? $data['date'] : null;
         $time = isset($data['time']) ? $data['time'] : null;
@@ -180,5 +180,54 @@ class UserController
         $userManager = new UserManager();
         $result = $userManager->UpdateReservation($client_id, $reservation_id, $date, $time, $number_of_people, $comment);
         echo json_encode($result);
+    }
+
+    //*****************************************************************************
+    //Send mail to user including link and token***********************************
+    //Mail is going to spam, have to be fix ***************************************
+    function forgotPW()
+    {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Get user's email
+            $jsonData = file_get_contents('php://input');
+            $emailObject = json_decode($jsonData, true);
+            $userEmail = $emailObject['email'];
+
+            if ($userEmail) {
+                $userManager = new UserManager();
+                $isEmailValid = $userManager->isEmailValid($userEmail);
+
+                if ($isEmailValid) {
+                    // Create link with token
+                    $TokenPW = new TokenPW;
+                    $tokenData = $TokenPW->generateToken();
+                    $resetLink = "http://localhost:3000/ResetPW?token=" . $tokenData['token'];
+
+                    // Call function to send mail
+                    $sujet = "Réinitialisation de votre mot de passe";
+                    $message = "Bonjour,\n\n";
+                    $message .= "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour procéder à la réinitialisation :\n";
+                    $message .= $resetLink . "\n\n";
+                    $message .= "Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer ce message.\n\n";
+                    $message .= "Cordialement,\nLe Quai Antique";
+
+                    $headers = "From: Info@le-quai-antique.com";
+
+                    // Use mail()
+                    $envoiEmail = mail($userEmail, $sujet, $message, $headers);
+
+                    // Check
+                    if ($envoiEmail) {
+                        echo "E-mail de réinitialisation envoyé avec succès à $userEmail.";
+                    } else {
+                        echo "Erreur lors de l'envoi de l'e-mail de réinitialisation. Veuillez vérifier les paramètres de configuration du serveur.";
+                    }
+                } else {
+                    echo "L'adresse e-mail n'est pas valide.";
+                }
+            } else {
+                echo "Adresse e-mail invalide.";
+            }
+        }
     }
 }
