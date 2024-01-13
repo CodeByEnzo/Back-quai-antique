@@ -149,21 +149,21 @@ class APIController
                 nl2br(htmlspecialchars($message))
             );
 
-            // Vérifier si l'envoi de l'email a réussi
+            // check if mail have been sent
             if (mail($to, $subject, $html_message, $headers)) {
                 $messageReturn = [
                     'from' => $obj->email,
                     'to' => "webmaster@ec-bootstrap.com"
                 ];
 
-                // Envoyer un retour de succès
+                // success return
                 echo json_encode($messageReturn);
             } else {
-                // Erreur lors de l'envoi de l'email
+                // Error
                 echo json_encode(['error' => 'Erreur lors de l\'envoi de l\'email']);
             }
         } else {
-            // Message vide
+            // Error Empty message
             echo json_encode(['error' => 'Message vide']);
         }
     }
