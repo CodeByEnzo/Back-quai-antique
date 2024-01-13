@@ -3,7 +3,6 @@
 require_once "models/front/user.manager.php";
 require_once "controllers/front/auth.controller.php";
 require_once "controllers/front/JWT.controller.php";
-require_once "controllers/front/TokenPW.php";
 require_once "models/front/Login.manager.php";
 
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
@@ -77,51 +76,57 @@ class UserController
 
     public function userUpdateInfo()
     {
-        require "./config/cors.php";
-        // Get Token from headers
-        $headers = getallheaders();
-        $token = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+        try {
+            require "./config/cors.php";
 
-        // Check Token
-        if (!isset($token) || !preg_match('/^Bearer\s(\S+)/', $token, $matches)) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'Token introuvable']);
+
+            // Get Token from headers
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+
+            // Check Token
+            if (!isset($token) || !preg_match('/^Bearer\s(\S+)/', $token, $matches)) {
+                http_response_code(400);
+                echo json_encode(['status' => 'error', 'message' => 'Token introuvable']);
+            }
+
+            // Check authentication
+            $authController = new AuthController();
+            $authController->authenticate();
+
+            $data = json_decode(file_get_contents('php://input'), true);
+            $client_id = $data['client_id'] ?? null;
+            $email = $data['email'] ?? null;
+            $number = $data['number'] ?? null;
+            $password = $data['password'] ?? null;
+            $username = $data['username'] ?? null;
+
+            if (empty($client_id) || empty($email) || empty($number) || empty($password) || empty($username)) {
+                http_response_code(400);
+                echo json_encode(['status' => 'error', 'message' => 'Données incorrectes']);
+            }
+
+            $userManager = new UserManager();
+            $updateResult = $userManager->UpdateUser($username, $number, $email, $password, $client_id);
+
+            if ($updateResult) {
+                $response = [
+                    'status' => 'success',
+                    'message' => 'Mise à jour du profil réussie.',
+                    'client_id' => $client_id,
+                    'email' => $email,
+                    'number' => $number,
+                    'username' => $username
+                ];
+            } else {
+                http_response_code(500);
+                $response = ['status' => 'error', 'message' => 'La mise à jour du profil a échoué.'];
+            }
+            header("Content-Type: application/json");
+            echo json_encode($response);
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => 'Erreur interne du serveur :' . $e]);
         }
-
-        // Check authentication
-        $authController = new AuthController();
-        $authController->authenticate();
-
-        $data = json_decode(file_get_contents('php://input'), true);
-        $client_id = $data['client_id'] ?? null;
-        $email = $data['email'] ?? null;
-        $number = $data['number'] ?? null;
-        $password = $data['password'] ?? null;
-        $username = $data['username'] ?? null;
-
-        if (empty($client_id) || empty($email) || empty($number) || empty($password) || empty($username)) {
-            http_response_code(400);
-            echo json_encode(['status' => 'error', 'message' => 'Données incorrectes']);
-        }
-
-        $userManager = new UserManager();
-        $updateResult = $userManager->UpdateUser($username, $number, $email, $password, $client_id);
-
-        if ($updateResult) {
-            $response = [
-                'status' => 'success',
-                'message' => 'Mise à jour du profil réussie.',
-                'client_id' => $client_id,
-                'email' => $email,
-                'number' => $number,
-                'username' => $username
-            ];
-        } else {
-            http_response_code(500);
-            $response = ['status' => 'error', 'message' => 'La mise à jour du profil a échoué.'];
-        }
-        header("Content-Type: application/json");
-        echo json_encode($response);
     }
 
 
