@@ -4,6 +4,12 @@ require_once "models/front/user.manager.php";
 require_once "controllers/front/auth.controller.php";
 require_once "controllers/front/JWT.controller.php";
 require_once "controllers/front/TokenPW.php";
+require_once "models/front/Login.manager.php";
+
+$autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
+require $autoloadPath;
+
+use Dotenv\Dotenv;
 
 // **User signifies the users from React app, do not get confuse with "clients" that can be handle from back end interface**
 // **So this code does response to requests from REACT**
@@ -11,6 +17,15 @@ require_once "controllers/front/TokenPW.php";
 // Handle users in REACT
 class UserController
 {
+    public $secret;
+
+    public function __construct()
+    {
+        // Load variables environement fot .env file
+        $dotenv = Dotenv::createImmutable(__DIR__ . "/../../");
+        $dotenv->load();
+        $this->secret = $_ENV['SECRET'];
+    }
     private function sendErrorResponse($code, $message)
     {
         http_response_code($code);
@@ -187,47 +202,66 @@ class UserController
     //Mail is going to spam, have to be fix ***************************************
     function forgotPW()
     {
+        require "./config/cors.php";
+
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Get user's email
             $jsonData = file_get_contents('php://input');
             $emailObject = json_decode($jsonData, true);
             $userEmail = $emailObject['email'];
 
-            if ($userEmail) {
-                $userManager = new UserManager();
-                $isEmailValid = $userManager->isEmailValid($userEmail);
-
-                if ($isEmailValid) {
-                    // Create link with token
-                    $TokenPW = new TokenPW;
-                    $tokenData = $TokenPW->generateToken();
-                    $resetLink = "http://localhost:3000/ResetPW?token=" . $tokenData['token'];
-
-                    // Call function to send mail
-                    $sujet = "Réinitialisation de votre mot de passe";
-                    $message = "Bonjour,\n\n";
-                    $message .= "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour procéder à la réinitialisation :\n";
-                    $message .= $resetLink . "\n\n";
-                    $message .= "Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer ce message.\n\n";
-                    $message .= "Cordialement,\nLe Quai Antique";
-
-                    $headers = "From: Info@le-quai-antique.com";
-
-                    // Use mail()
-                    $envoiEmail = mail($userEmail, $sujet, $message, $headers);
-
-                    // Check
-                    if ($envoiEmail) {
-                        echo "E-mail de réinitialisation envoyé avec succès à $userEmail.";
-                    } else {
-                        echo "Erreur lors de l'envoi de l'e-mail de réinitialisation. Veuillez vérifier les paramètres de configuration du serveur.";
-                    }
-                } else {
-                    echo "L'adresse e-mail n'est pas valide.";
+            try {
+                if (!$userEmail) {
+                    throw new Exception("L'adresse e-mail n'est pas valide.");
                 }
-            } else {
-                echo "Adresse e-mail invalide.";
+
+                $userManager = new UserManager();
+                $loginManager = new LoginManager();
+                $jwt = new JWT();
+                $user = $loginManager->getUserByEmail($userEmail);
+
+                if (!$user || !$userManager->isEmailValid($userEmail)) {
+                    throw new Exception("L'adresse e-mail n'est pas valide.");
+                }
+
+                // Create link with token
+                $header = [
+                    'typ' => 'JWT',
+                    'alg' => 'HS256'
+                ];
+                $payload = [
+                    'email' => $user['email'],
+                    'username' => $user['username']
+                ];
+                $token = $jwt->generate($header, $payload, $this->secret);
+                $userManager->pushToken($userEmail, $token);
+
+                $resetLink = "https://le-quai-antique.ec-bootstrap.com/ResetPW?token=" . $token;
+
+                // Mail
+                $subject = "Réinitialisation de votre mot de passe";
+
+                $message = "Bonjour,\n\n";
+                $message .= "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour procéder à la réinitialisation :\n";
+                $message .= $resetLink . "\n\n";
+                $message .= "Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer ce message.\n\n";
+                $message .= "Cordialement,\nLe Quai Antique";
+
+                $headers = "From: webmaster@ec-bootstrap.com";
+
+                // Use mail()
+                $envoiEmail = mail($userEmail, $subject, $message, $headers);
+
+                if ($envoiEmail) {
+                    echo "E-mail de réinitialisation envoyé avec succès à $userEmail.";
+                } else {
+                    throw new Exception("Erreur lors de l'envoi de l'e-mail de réinitialisation. Veuillez vérifier les paramètres de configuration du serveur.");
+                }
+            } catch (Exception $e) {
+                echo $e->getMessage();
             }
+        } else {
+            echo "Adresse e-mail invalide.";
         }
     }
 }

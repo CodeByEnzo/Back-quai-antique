@@ -8,9 +8,7 @@ header("Content-Type: application/json");
 header('Access-Control-Max-Age: 86400');
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(200);
-    exit();
 }
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     http_response_code(200);
-    exit();
 }

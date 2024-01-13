@@ -3,12 +3,13 @@ require_once 'controllers/front/JWT.controller.php';
 
 $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;
+
 use Dotenv\Dotenv;
 
 class LoginManager extends Model
 {
     public $secret;
-    
+
     public function __construct()
     {
         // Load variables environement fot .env file
@@ -16,12 +17,12 @@ class LoginManager extends Model
         $dotenv->load();
         $this->secret = $_ENV['SECRET'];
     }
-    
+
     public function loginUser(string $email, string $password)
     {
         $jwt = new JWT();
         $user = $this->getUserByEmail($email);
-        
+
         if (!$user) {
             return [
                 'status' => 'error',
@@ -48,17 +49,17 @@ class LoginManager extends Model
             'message' => 'Connexion réussie',
             'data' => [
                 'token' => $token
-                ]
-            ];
-        }
-        
-        private function getUserByEmail($email)
-        {
+            ]
+        ];
+    }
+
+    public function getUserByEmail($email)
+    {
         $req = "SELECT * FROM clients WHERE email = :email";
         $stmt = $this->getBdd()->prepare($req);
         $stmt->bindParam(':email', $email);
         $stmt->execute();
         $user = $stmt->fetch();
         return $user;
-    }    
+    }
 }

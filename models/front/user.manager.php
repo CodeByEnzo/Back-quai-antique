@@ -177,5 +177,23 @@ class UserManager extends Model
             return false;
         }
     }
+    public function pushToken($email, $token)
+    {
+        try {
+            $req = "UPDATE clients SET token = :token WHERE email = :email";
+            $stmt = $this->getBdd()->prepare($req);
+            $stmt->bindValue(':token', $token, PDO::PARAM_STR);
+            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+            $stmt->execute();
 
+            if ($stmt->rowCount() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour du token en base de données : " . $e->getMessage());
+            return false;
+        }
+    }
 }

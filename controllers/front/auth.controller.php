@@ -26,7 +26,7 @@ class AuthController
         try {
             require "./config/cors.php";
 
-            // Verify if token is in the request
+            // Check if token is in the request
             if (isset($_SERVER['Authorization'])) {
                 $token = trim($_SERVER['Authorization']);
             } elseif (isset($_SERVER['HTTP_AUTHORIZATION'])) {
@@ -37,7 +37,7 @@ class AuthController
                     $token = trim($requestHeaders['Authorization']);
                 }
             }
-            // Verify if string start with "Bearer "
+            // Check if string start with "Bearer "
             if (!isset($token) || !preg_match('/Bearer\s(\S+)/', $token, $matches)) {
                 return false;
             }
@@ -57,7 +57,7 @@ class AuthController
                 echo json_encode(['message' => 'Le token est invalide']);
                 exit;
             }
-            // Verify if expired
+            // Check if expired
             if ($jwt->isExpired($token)) {
                 http_response_code(403);
                 echo json_encode(['message' => 'Le token a expiré']);

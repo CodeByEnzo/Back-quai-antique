@@ -4,7 +4,7 @@ class JWT
     /**
      * generate JWT
      * @param array $header Header's token
-     * @param array $payload Payload's token'
+     * @param array $payload Payload's token
      * @param string $secret Secret key
      * @param int $validity Validity's token (seconds)
      * @return string Token
@@ -59,7 +59,7 @@ class JWT
     }
 
     /**
-     * Rget header
+     * Return header
      * @param string $token Token
      * @return array Header
      */
