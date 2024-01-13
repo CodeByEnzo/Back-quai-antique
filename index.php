@@ -68,8 +68,11 @@ try {
                     case "sendMessage":
                         $apiController->sendMessage();
                         break;
-                    case "ForgotPW":
+                    case "rorgotPW":
                         $UserController->forgotPW();
+                        break;
+                    case "resetPW":
+                        $UserController->resetPW();
                         break;
                     case "reservation":
                         $UserController->makeReservation();

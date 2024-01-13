@@ -196,4 +196,27 @@ class UserManager extends Model
             return false;
         }
     }
+    /**
+     * Update user password
+     *
+     * @param string $email    user email
+     * @param string $password   new password
+     *
+     * @return bool return bool
+     */
+    public function resetPWmanager($email, $password)
+    {
+        try {
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+            $req = "UPDATE clients SET password = :password WHERE email = :email";
+            $stmt = $this->getBdd()->prepare($req);
+            $stmt->bindValue(':password', $passwordHash, PDO::PARAM_STR);
+            $stmt->bindValue(':email', $email, PDO::PARAM_STR);
+
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la mise à jour du mot de passe en base de données : " . $e->getMessage());
+            return false;
+        }
+    }
 }

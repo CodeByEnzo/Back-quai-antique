@@ -264,4 +264,37 @@ class UserController
             echo "Adresse e-mail invalide.";
         }
     }
+    function resetPW()
+    {
+        require "./config/cors.php";
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? $headers['Authorization'] : null;
+
+            // Check Token
+            if (!isset($token) || !preg_match('/^Bearer\s(\S+)/', $token, $matches)) {
+                http_response_code(400);
+                echo json_encode(['status' => 'error', 'message' => 'Token introuvable']);
+            }
+
+            // Verify if user is authenticated
+            $authController = new AuthController();
+            $userManager = new UserManager();
+            $authController->authenticate();
+
+            //Decode token to get the payload and extract user's email
+            $jwt = new JWT();
+            $payload = $jwt->getPayload($token);
+            $email = $payload['email'];
+
+            //Get new password
+            $jsonData = file_get_contents('php://input');
+            $emailObject = json_decode($jsonData, true);
+            $newPW = $emailObject['newPassword'];
+
+            $userManager->resetPWmanager($email, $newPW);
+        }
+    }
 }
