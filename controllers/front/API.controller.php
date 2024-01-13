@@ -124,41 +124,47 @@ class APIController
     public function sendMessage()
     {
         require "./config/cors.php";
-
-        //decodage de l'information qui est récupéré de la partie front
         $obj = json_decode(file_get_contents('php://input'));
-
-        $message = isset($obj->message) ? $obj->message : (isset($obj->content) ? $obj->content : '');
-
+        $message = $obj->message ?? $obj->content ?? '';
         if (!empty($message)) {
-            $to = "enzocapi@hotmail.com";
+            $to = "webmaster@ec-bootstrap.com";
             $subject = "Message du site Le Quai Antique de : " . $obj->name;
-            $headers = "From : " . $obj->email . "\r\n";
+            $headers = "From: webmaster@ec-bootstrap.com\r\n";
             $headers .= "Reply-To: " . $obj->email . "\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-            $html_message = "<html><body>";
-            $html_message .= "<h2>Nouveau message de formulaire de contact</h2>";
-            $html_message .= "<p><strong>Nom :</strong> " . $obj->name . "</p>";
-            $html_message .= "<p><strong>Email :</strong> " . $obj->email . "</p>";
-            $html_message .= "<p><strong>Message :</strong></p>";
-            $html_message .= "<p>" . nl2br(htmlspecialchars($message)) . "</p>";
-            $html_message .= "</body></html>";
+            $html_message = sprintf(
+                "<html>
+                <body>
+                <h2>Nouveau message de formulaire de contact</h2>
+                <p><strong>Nom :</strong> %s</p>
+                <p><strong>Email :</strong> %s</p>
+                <p><strong>Message :</strong></p>
+                <p>%s</p>
+                </body>
+                </html>",
+                htmlspecialchars($obj->name),
+                htmlspecialchars($obj->email),
+                nl2br(htmlspecialchars($message))
+            );
 
-            mail($to, $subject, $html_message, $headers);
+            // Vérifier si l'envoi de l'email a réussi
+            if (mail($to, $subject, $html_message, $headers)) {
+                $messageReturn = [
+                    'from' => $obj->email,
+                    'to' => "webmaster@ec-bootstrap.com"
+                ];
 
-            $messageReturn = [
-                'from' => $obj->email,
-                'to' => "enzocapi@hotmail.com"
-            ];
-
-            //Send success return
-            echo json_encode($messageReturn);
+                // Envoyer un retour de succès
+                echo json_encode($messageReturn);
+            } else {
+                // Erreur lors de l'envoi de l'email
+                echo json_encode(['error' => 'Erreur lors de l\'envoi de l\'email']);
+            }
         } else {
-            // Message empty
+            // Message vide
             echo json_encode(['error' => 'Message vide']);
         }
     }
-
 }
