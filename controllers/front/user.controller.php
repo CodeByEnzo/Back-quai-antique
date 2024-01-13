@@ -209,66 +209,63 @@ class UserController
     {
         require "./config/cors.php";
 
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            // Get user's email
-            $jsonData = file_get_contents('php://input');
-            $emailObject = json_decode($jsonData, true);
-            $userEmail = $emailObject['email'];
+        // Get user's email
+        $jsonData = file_get_contents('php://input');
+        $emailObject = json_decode($jsonData, true);
+        $userEmail = $emailObject['email'];
 
-            try {
-                if (!$userEmail) {
-                    throw new Exception("L'adresse e-mail n'est pas valide.");
-                }
-
-                $userManager = new UserManager();
-                $loginManager = new LoginManager();
-                $jwt = new JWT();
-                $user = $loginManager->getUserByEmail($userEmail);
-
-                if (!$user || !$userManager->isEmailValid($userEmail)) {
-                    throw new Exception("L'adresse e-mail n'est pas valide.");
-                }
-
-                // Create link with token
-                $header = [
-                    'typ' => 'JWT',
-                    'alg' => 'HS256'
-                ];
-                $payload = [
-                    'email' => $user['email'],
-                    'username' => $user['username']
-                ];
-                $token = $jwt->generate($header, $payload, $this->secret);
-                $userManager->pushToken($userEmail, $token);
-
-                $resetLink = "https://le-quai-antique.ec-bootstrap.com/ResetPW?token=" . $token;
-
-                // Mail
-                $subject = "Réinitialisation de votre mot de passe";
-
-                $message = "Bonjour,\n\n";
-                $message .= "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour procéder à la réinitialisation :\n";
-                $message .= $resetLink . "\n\n";
-                $message .= "Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer ce message.\n\n";
-                $message .= "Cordialement,\nLe Quai Antique";
-
-                $headers = "From: webmaster@ec-bootstrap.com";
-
-                // Use mail()
-                $envoiEmail = mail($userEmail, $subject, $message, $headers);
-
-                if ($envoiEmail) {
-                    echo "E-mail de réinitialisation envoyé avec succès à $userEmail.";
-                } else {
-                    throw new Exception("Erreur lors de l'envoi de l'e-mail de réinitialisation. Veuillez vérifier les paramètres de configuration du serveur.");
-                }
-            } catch (Exception $e) {
-                echo $e->getMessage();
+        try {
+            if (!$userEmail) {
+                throw new Exception("L'adresse e-mail n'est pas valide.");
             }
-        } else {
-            echo "Adresse e-mail invalide.";
+
+            $userManager = new UserManager();
+            $loginManager = new LoginManager();
+            $jwt = new JWT();
+            $user = $loginManager->getUserByEmail($userEmail);
+
+            if (!$user || !$userManager->isEmailValid($userEmail)) {
+                throw new Exception("L'adresse e-mail n'est pas valide.");
+            }
+
+            // Create link with token
+            $header = [
+                'typ' => 'JWT',
+                'alg' => 'HS256'
+            ];
+            $payload = [
+                'email' => $user['email'],
+                'username' => $user['username']
+            ];
+            $token = $jwt->generate($header, $payload, $this->secret);
+            $userManager->pushToken($userEmail, $token);
+
+            $resetLink = "https://le-quai-antique.ec-bootstrap.com/ResetPW?token=" . $token;
+
+            // Mail
+            $subject = "Réinitialisation de votre mot de passe";
+
+            $message = "Bonjour,\n\n";
+            $message .= "Vous avez demandé la réinitialisation de votre mot de passe. Cliquez sur le lien ci-dessous pour procéder à la réinitialisation :\n";
+            $message .= $resetLink . "\n\n";
+            $message .= "Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer ce message.\n\n";
+            $message .= "Cordialement,\nLe Quai Antique";
+
+            $headers = "From: webmaster@ec-bootstrap.com";
+
+            // Use mail()
+            $envoiEmail = mail($userEmail, $subject, $message, $headers);
+
+            if ($envoiEmail) {
+                echo "E-mail de réinitialisation envoyé avec succès à $userEmail.";
+            } else {
+                throw new Exception("Erreur lors de l'envoi de l'e-mail de réinitialisation. Veuillez vérifier les paramètres de configuration du serveur.");
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
         }
     }
+
     function resetPW()
     {
         require "./config/cors.php";

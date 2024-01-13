@@ -68,7 +68,7 @@ try {
                     case "sendMessage":
                         $apiController->sendMessage();
                         break;
-                    case "rorgotPW":
+                    case "forgotPW":
                         $UserController->forgotPW();
                         break;
                     case "resetPW":
