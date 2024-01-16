@@ -49,6 +49,27 @@ class APIManager extends Model
         $stmt->closeCursor();
         return $opening_hours;
     }
+    public function getIsRestaurantFull($date, $opening_hour, $closing_hour)
+    {
+        $query = "
+        SELECT SUM(number_of_people) AS total_reserved
+        FROM reservations
+        WHERE 
+            date = :date AND 
+            time BETWEEN :opening_hour AND :closing_hour;
+    ";
+        $stmt = $this->getBdd()->prepare($query);
+        $stmt->bindParam(":date", $date, PDO::PARAM_STR);
+        $stmt->bindParam(":opening_hour", $opening_hour, PDO::PARAM_STR);
+        $stmt->bindParam(":closing_hour", $closing_hour, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $result['total_reserved'] ?? 0;
+    }
+
+
+
     public function getDBCompanyInfo()
     {
         $req = "SELECT * FROM company_info";

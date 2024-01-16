@@ -117,9 +117,42 @@ class APIController
         return $tab;
     }
 
+    //************************************************************************
+    // API controller to check if the restaurant is full
+    public function isRestaurantFull()
+    {
+        require "./config/cors.php";
+
+        // Get data from the request body as JSON
+        $requestData = json_decode(file_get_contents('php://input'), true);
+
+        // Check if all required data is in the query
+        $date = $requestData['date'] ?? null;
+        $opening_hour = $requestData['isOpen'] ?? null;
+        $closing_hour = $requestData['isClose'] ?? null;
+        $number_of_people = $requestData['number_of_people'] ?? null;
+
+        if (
+            !$date || !$opening_hour || !$closing_hour
+        ) {
+            Model::sendJSON(['error' => 'Missing required data']);
+            return;
+        }
+
+        // Call the model to check database
+        $totalReserved = $this->apiManager->getIsRestaurantFull(
+            $date,
+            $opening_hour,
+            $closing_hour
+        );
+        // Returns false if the number of people reserved + the current reservation is greater than 30
+        Model::sendJSON(['isRestaurantFull' => $totalReserved + $number_of_people > 30]);
+    }
+
+
+
     //*****************************************************************************
     //To get messages from contact page********************************************
-    //Mail is going to spam, have to be fix ***************************************
     public function sendMessage()
     {
         require "./config/cors.php";

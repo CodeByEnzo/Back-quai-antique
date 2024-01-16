@@ -62,6 +62,9 @@ try {
                     case "hours":
                         $apiController->getHours();
                         break;
+                    case "isRestaurantFull":
+                        $apiController->isRestaurantFull();
+                        break;
                     case "gallerys":
                         $apiController->getGallerys();
                         break;
