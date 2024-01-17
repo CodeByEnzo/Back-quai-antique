@@ -1,6 +1,6 @@
 <?php
 
-function ajoutImage($file, $dir)
+function addPic($file, $dir)
 {
     //Verify if not empty
     if (!isset($file['name']) || empty($file['name']))
@@ -11,7 +11,7 @@ function ajoutImage($file, $dir)
     $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $random = rand(0, 99999);
     $target_file = $dir . $random . "_" . $file['name'];
-    //Verify if file is an image, verify extension, if doesnt exist and file not to big
+    //Check if file is an image, verify extension, if doesnt exist and file not to big
     //Place file in the right folder where defined
     if (!getimagesize($file["tmp_name"]))
         throw new Exception("Le fichier n'est pas une image");

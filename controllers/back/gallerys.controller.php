@@ -83,8 +83,8 @@ class gallerysController
             $gallery_content = security::secureHTML($_POST['gallery_content']);
             $gallery_img = "";
             if ($_FILES['gallery_img']['size'] > 0) {
-                $repertoire = "public/images/";
-                $gallery_img = ajoutImage($_FILES['gallery_img'], $repertoire);
+                $folder = "public/images/";
+                $gallery_img = addPic($_FILES['gallery_img'], $folder);
             }
             $gallery_id =  $this->gallerysManager->createGallery($gallery_title, $gallery_content, $gallery_img);
 

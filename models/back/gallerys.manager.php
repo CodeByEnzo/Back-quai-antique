@@ -31,11 +31,11 @@ class gallerysManager extends Model
             $stmt->execute();
             $gallery = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // If a new file have been upload, Use ajoutImage() to handle it
+            // If a new file have been upload, Use addPic() to handle it
             if (!empty($file['name'])) {
                 $dir = "public/images/";
-                $gallery_img = ajoutImage($file, $dir);
-                // on supprime l'ancien fichier associé à l'entrée
+                $gallery_img = addPic($file, $dir);
+                // Delete older file
                 unlink($dir . $gallery['gallery_img']);
             } else {
                 $gallery_img = $gallery['gallery_img'];
