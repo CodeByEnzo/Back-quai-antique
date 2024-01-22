@@ -27,14 +27,17 @@ class UserManager extends Model
 
     public function UpdateUser($username, $number, $email, $password, $client_id)
     {
-        // Validation des données
+        $response = ['status' => 'success'];
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $response = ['status' => 'error', 'message' => 'Adresse email invalide'];
+            header("Content-Type: application/json");
+            echo json_encode($response);
+            return;
         } else {
             $db = $this->getBdd();
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-            // Préparation de la requête
             $stmt = $db->prepare("UPDATE clients 
             SET username = :username, number = :number, email = :email, password = :password 
             WHERE client_id = :client_id");
@@ -48,20 +51,15 @@ class UserManager extends Model
 
                 if ($stmt->execute()) {
                     if ($stmt->rowCount() > 0) {
-                        // La mise à jour a réussi
                         return true;
                     } else {
-                        // Aucun enregistrement mis à jour
                         return false;
                     }
                 } else {
-                    // La mise à jour a échoué
                     return false;
                 }
             }
         }
-
-        // Convertir la réponse en JSON
         header("Content-Type: application/json");
         echo json_encode($response);
     }

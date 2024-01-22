@@ -78,18 +78,14 @@ class UserController
     {
         try {
             require "./config/cors.php";
-
-
             // Get Token from headers
             $headers = getallheaders();
             $token = isset($headers['Authorization']) ? $headers['Authorization'] : null;
-
             // Check Token
             if (!isset($token) || !preg_match('/^Bearer\s(\S+)/', $token, $matches)) {
                 http_response_code(400);
                 echo json_encode(['status' => 'error', 'message' => 'Token introuvable']);
             }
-
             // Check authentication
             $authController = new AuthController();
             $authController->authenticate();
