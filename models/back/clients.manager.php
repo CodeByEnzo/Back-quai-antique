@@ -1,7 +1,7 @@
 <?php
-
+//This file is the model of users from back office*****
+//*****************************************************
 require_once "models/Model.php";
-//
 class clientsManager extends Model
 {
     public function getClients()

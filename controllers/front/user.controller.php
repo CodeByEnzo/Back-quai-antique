@@ -1,5 +1,6 @@
 <?php
-
+// **User signifies the users from React app, do not get confuse with "clients" that can be handle from back end interface**
+// **So this code does response to requests from REACT**
 require_once "models/front/user.manager.php";
 require_once "controllers/front/auth.controller.php";
 require_once "controllers/front/JWT.controller.php";
@@ -9,9 +10,6 @@ $autoloadPath = realpath(__DIR__ . '/../../vendor/autoload.php');
 require $autoloadPath;
 
 use Dotenv\Dotenv;
-
-// **User signifies the users from React app, do not get confuse with "clients" that can be handle from back end interface**
-// **So this code does response to requests from REACT**
 
 // Handle users in REACT
 class UserController
@@ -35,41 +33,32 @@ class UserController
     public function getUserInfo()
     {
         require "./config/cors.php";
-
         //Get token's user from headers of query
         $headers = getallheaders();
         $token = $headers['Authorization'];
-
         // Verify if user is authenticated
         $authController = new AuthController();
         $authController->authenticate();
-
         //Decode token to get the payload and extract user's email
         $jwt = new JWT();
         $payload = $jwt->getPayload($token);
         $email = $payload['email'];
-
         // Get user's info matches the email
         $userManager = new UserManager();
         $userData = $userManager->getUserByEmail($email);
-
         // Get user's reservation matches the id
         $client_id = $userData['id'];
         $userReservations = $userManager->getUserReservations($client_id);
-
         // Verify if user id were successfully retrieved
         if (!$client_id) {
             $this->sendErrorResponse(401, 'Impossible de récupérer les informations de l\'utilisateur');
             exit;
         }
-        $client_number = $userData['number'];
-
         // Merge user's data and reservation in array
         $userInfo = [
             'user' => $userData,
             'reservations' => $userReservations,
         ];
-
         // Return user's info
         echo json_encode($userInfo);
     }
@@ -131,11 +120,9 @@ class UserController
         require "./config/cors.php";
 
         $data = json_decode(file_get_contents('php://input'), true);
-
         if (json_last_error() != JSON_ERROR_NONE) {
             throw new Exception('Erreur lors de la lecture des données JSON');
         }
-
         $username = $data['username'];
         $number = $data['number'];
         $email = $data['email'];
@@ -152,7 +139,6 @@ class UserController
         $result = $userManager->registerUser($username, $number, $email, $password);
         echo json_encode($result);
     }
-
 
     public function makeReservation()
     {
