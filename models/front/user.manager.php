@@ -96,8 +96,10 @@ class UserManager extends Model
     public function reservation($date, $time, $number_of_people, $comment, $client_id)
     {
         $pdo = $this->getBdd();
-        $req = $pdo->prepare("INSERT INTO reservations (date, time, number_of_people, comments, client_id) 
-                          VALUES (:date, :time, :number_of_people, :comment, :client_id)");
+        $req = $pdo->prepare("INSERT INTO reservations (date, time, number_of_people, comments, client_id, client_number, client_username) 
+                        SELECT :date, :time, :number_of_people, :comment, :client_id, c.number, c.username
+                        FROM clients c
+                        WHERE c.client_id = :client_id");
         $req->bindValue(":date", $date, PDO::PARAM_STR);
         $req->bindValue(":time", $time, PDO::PARAM_STR);
         $req->bindValue(":number_of_people", $number_of_people, PDO::PARAM_INT);

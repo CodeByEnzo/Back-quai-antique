@@ -38,7 +38,7 @@ class reservationsManager extends Model
             $stmt = $this->getBdd()->prepare($req);
             $stmt->bindValue(":reservation_id", $reservation_id, PDO::PARAM_INT);
             $stmt->bindValue(":client_id", $client_id, PDO::PARAM_STR);
-            $stmt->bindValue(":date", $date, PDO::PARAM_INT);
+            $stmt->bindValue(":date", $date, PDO::PARAM_STR);
             $stmt->bindValue(":time", $time, PDO::PARAM_STR);
             $stmt->bindValue(":comments", $comments, PDO::PARAM_STR);
             $stmt->execute();
