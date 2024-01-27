@@ -17,20 +17,22 @@
         <?php foreach ($reservations as $reservation) : ?>
             <?php if (isset($_POST['reservation_id']) && $_POST['reservation_id'] == $reservation['reservation_id']) : ?>
                 <!--Inputs to modify client's reservation-->
-                <form method="POST" action="<?= URL ?>back/reservations/validationModification">
+                <form method="POST" action="<?= htmlspecialchars(URL) ?>back/reservations/validationModification">
                     <tr>
-                        <td><?= $reservation['reservation_id'] ?></td>
-                        <td><?= $reservation['client_id'] ?></td>
-                        <td><?= $reservation['client_id'] ?></td>
+                        <td><?= htmlspecialchars($reservation['reservation_id']) ?></td>
+                        <td><?= htmlspecialchars($reservation['client_id']) ?></td>
+                        <td><?= htmlspecialchars($reservation['client_username']) ?></td>
                         <!-- Hidden input contains client's ID (cant be changed)-->
-                        <input type="hidden" name="client_id" value="<?= $reservation['client_id'] ?>" />
-                        <td><input type="text" name="date" class="form-control" value="<?= $reservation['date'] ?>" /></td>
-                        <td><input type="text" name="time" class="form-control" value="<?= $reservation['time'] ?>" /></td>
-                        <td><textarea name='comments' class="form-control" rows="3"><?= $reservation['comments'] ?></textarea></td>
-                        <td><p><?= $reservation['client_number'] ?></p></td>
+                        <input type="hidden" name="client_id" value="<?= htmlspecialchars($reservation['client_id']) ?>" />
+                        <td><input type="text" name="date" class="form-control" value="<?= htmlspecialchars($reservation['date']) ?>" /></td>
+                        <td><input type="text" name="time" class="form-control" value="<?= htmlspecialchars($reservation['time']) ?>" /></td>
+                        <td><textarea name='comments' class="form-control" rows="3"><?= htmlspecialchars($reservation['comments']) ?></textarea></td>
+                        <td>
+                            <p><?= htmlspecialchars($reservation['client_number']) ?></p>
+                        </td>
 
                         <td colspan="2">
-                            <input type="hidden" name="reservation_id" value="<?= $reservation['reservation_id'] ?>" />
+                            <input type="hidden" name="reservation_id" value="<?= htmlspecialchars($reservation['reservation_id']) ?>" />
                             <button class="btn btn-primary" type="submit">Valider</button>
                         </td>
                     </tr>
@@ -39,7 +41,8 @@
                 <tr>
                     <td><?= $reservation['reservation_id'] ?></td>
                     <td><?= $reservation['client_id'] ?></td>
-                    <td><?= $reservation['date'] ?></td>
+                    <td><?= $reservation['client_username'] ?></td>
+                    <td><?= date('d/m/Y', strtotime($reservation['date'])) ?></td>
                     <td><?= $reservation['time'] ?></td>
                     <td><?= $reservation['comments'] ?></td>
                     <td><?= $reservation['client_number'] ?></td>
