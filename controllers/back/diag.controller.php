@@ -17,8 +17,6 @@ class DiagController
     {
         if (security::verifAccessSession()) {
             $questions = $this->diagManager->getQuestions();
-
-            // Pour chaque question, récupérer les réponses correspondantes
             foreach ($questions as $index => $question) {
                 $questions[$index]['answers'] = $this->diagManager->getAnswersForQuestion($question['id']);
             }
@@ -90,20 +88,17 @@ class DiagController
     {
         if (security::verifAccessSession() && isset($_POST['question_text']) && isset($_POST['answers']) && isset($_POST['multipleAnswers'])) {
             $questionText = security::secureHTML($_POST['question_text']);
-            $multipleAnswers = ($_POST['multipleAnswers'] === 'on') ? 1 : 0; // Vérifiez si la case est cochée
+            $multipleAnswers = ($_POST['multipleAnswers'] === 'on') ? 1 : 0;
 
             if (empty($questionText)) {
                 throw new Exception("La question ne peut pas être vide.");
             }
-
-            // Étape 1 : Insérer la question et récupérer l'ID généré automatiquement
             $questionId = $this->diagManager->createQuestion($questionText, $multipleAnswers);
 
             if (!$questionId) {
                 throw new Exception("La création de la question a échoué.");
             }
 
-            // Étape 2 : Insérer les réponses en utilisant l'ID de la question
             $answers = $_POST['answers'];
 
             if (!empty($answers) && is_array($answers)) {
@@ -112,10 +107,8 @@ class DiagController
                 foreach ($answers as $answer) {
                     $answerText = security::secureHTML($answer['answer_text']);
 
-                    // Insérez la réponse en utilisant l'ID de la question
                     $this->diagManager->createAnswer($questionId, $answerKey, $answerText);
 
-                    // Incrémentez la clé de réponse à la lettre suivante de l'alphabet
                     $answerKey++;
                 }
 
@@ -131,7 +124,7 @@ class DiagController
             throw new Exception("Les données envoyées sont incorrectes : question_text et answers doivent être définis.");
         }
     }
-    
+
     public function getDiagData()
     {
         header("Access-Control-Allow-Origin: *");

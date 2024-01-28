@@ -4,7 +4,7 @@ require_once "./controllers/back/Security.class.php";
 require_once "./models/back/clients.manager.php";
 require_once "./controllers/back/utile.php";
 
-// **This code is for the CRUD, to manage clients from back end interface**
+// **This code is for the CRUD, to manage clients from back office**
 
 class clientsController
 {
@@ -40,18 +40,11 @@ class clientsController
 
     public function modification()
     {
-        if (
-            isset($_POST['client_id']) && !empty($_POST['client_id']) &&
-            isset($_POST['username']) && !empty($_POST['username']) &&
-            isset($_POST['number']) && !empty($_POST['number']) &&
-            isset($_POST['email']) && !empty($_POST['email'])
-        ) {
-            // var_dump($_POST);
-
-            $client_id = intval($_POST['client_id']);
-            $username = filter_var($_POST['username']);
-            $number = filter_var($_POST['number']);
-            $email = filter_var($_POST['email']);
+        if (security::verifAccessSession()) {
+            $client_id = security::secureHTML($_POST['client_id']);
+            $username = security::secureHTML($_POST['username']);
+            $number = security::secureHTML($_POST['number']);
+            $email = security::secureHTML($_POST['email']);
 
             $this->clientsManager->updateClient($client_id, $username, $number, $email);
 

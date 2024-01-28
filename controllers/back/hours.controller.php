@@ -26,22 +26,13 @@ class hoursController
 
     public function modification()
     {
-        if (
-            isset($_POST['id']) &&
-            isset($_POST['day_of_week']) &&
-            isset($_POST['lunch_opening_time']) &&
-            isset($_POST['lunch_closing_time']) &&
-            isset($_POST['dinner_opening_time']) &&
-            isset($_POST['dinner_closing_time'])
-        ) {
-            $id = intval($_POST['id']);
-            $day_of_week = filter_var($_POST['day_of_week']);
-            $lunch_opening_time = filter_var($_POST['lunch_opening_time']);
-            $lunch_closing_time = filter_var($_POST['lunch_closing_time']);
-            $dinner_opening_time = filter_var($_POST['dinner_opening_time']);
-            $dinner_closing_time = filter_var($_POST['dinner_closing_time']);
-
-
+        if (security::verifAccessSession()) {
+            $id = security::secureHTML($_POST['id']);
+            $day_of_week = security::secureHTML($_POST['day_of_week']);
+            $lunch_opening_time = security::secureHTML($_POST['lunch_opening_time']);
+            $lunch_closing_time = security::secureHTML($_POST['lunch_closing_time']);
+            $dinner_opening_time = security::secureHTML($_POST['dinner_opening_time']);
+            $dinner_closing_time = security::secureHTML($_POST['dinner_closing_time']);
             if (!$id) {
                 throw new Exception("Les données envoyées sont incorrectes : id doit être un entier valide.");
             } else {
@@ -53,7 +44,7 @@ class hoursController
                 header("Location: " . URL . "back/hours/visualisation");
             }
         } else {
-            throw new Exception("Les données envoyées sont incorrectes");
+            throw new Exception("Vous n'avez pas les droits.");
         }
     }
 }

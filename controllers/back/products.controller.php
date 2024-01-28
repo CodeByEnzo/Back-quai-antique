@@ -38,20 +38,12 @@ class productsController
 
     public function modification()
     {
-        if (
-            isset($_POST['product_id']) && !empty($_POST['product_id']) &&
-            isset($_POST['title']) && !empty($_POST['title']) &&
-            isset($_POST['content']) && !empty($_POST['content']) &&
-            isset($_POST['prix']) && !empty($_POST['prix']) &&
-            isset($_POST['category_id']) && !empty($_POST['category_id'])
-        ) {
-            // var_dump($_POST);
-
-            $product_id = intval($_POST['product_id']);
-            $title = filter_var($_POST['title']);
-            $content = filter_var($_POST['content']);
-            $prix = intval($_POST['prix']);
-            $category_id = intval($_POST['category_id']);
+        if (security::verifAccessSession()) {
+            $product_id = (int)security::secureHTML($_POST['product_id']);
+            $title = security::secureHTML($_POST['title']);
+            $content = security::secureHTML($_POST['content']);
+            $prix = security::secureHTML($_POST['prix']);
+            $category_id = security::secureHTML($_POST['category_id']);
 
             $this->productsManager->updateProduct($product_id, $title, $content, $prix, $category_id);
 

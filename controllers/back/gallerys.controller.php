@@ -16,7 +16,6 @@ class gallerysController
     {
         if (security::verifAccessSession()) {
             $gallerys = $this->gallerysManager->getGallerys();
-            // print_r($gallerys);
             require_once "views/gallerysVisualisation.view.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");
@@ -39,21 +38,16 @@ class gallerysController
 
     public function modification()
     {
-        if (
-            isset($_POST['gallery_id']) &&
-            isset($_POST['gallery_title']) &&
-            isset($_POST['gallery_content']) &&
-            isset($_FILES['gallery_img'])
-        ) {
-            $gallery_id = filter_var($_POST['gallery_id'], FILTER_VALIDATE_INT);
-            $gallery_title = htmlspecialchars($_POST['gallery_title'], ENT_QUOTES, 'UTF-8');
-            $gallery_content = htmlspecialchars($_POST['gallery_content'], ENT_QUOTES, 'UTF-8');
+        if (security::verifAccessSession()) {
+            $gallery_id = security::secureHTML($_POST['gallery_id']);
+            $gallery_title = security::secureHTML($_POST['gallery_title']);
+            $gallery_content = security::secureHTML($_POST['gallery_content']);
             $gallery_img = $_FILES['gallery_img'];
 
             if (!$gallery_id) {
-                throw new Exception("Les données envoyées sont incorrectes : gallery_id doit être un entier valide.");
+                throw new Exception("Les données envoyées sont incorrectes");
             } else if (!$gallery_title || !$gallery_content) {
-                throw new Exception("Les données envoyées sont incorrectes : title, content ne peuvent pas être vides.");
+                throw new Exception("Les données envoyées sont incorrectes");
             } else {
                 $this->gallerysManager->updateGallery($gallery_id, $gallery_title, $gallery_content, $gallery_img);
                 $_SESSION['alert'] = [
@@ -63,7 +57,7 @@ class gallerysController
                 header("Location: " . URL . "back/gallerys/visualisation");
             }
         } else {
-            throw new Exception("Les données envoyées sont incorrectes : gallery_id, gallery_title, gallery_content, gallery_img doivent être définis.");
+            throw new Exception("Vous n'avez pas les droits.");
         }
     }
 
@@ -75,7 +69,7 @@ class gallerysController
             throw new Exception("Vous n'avez pas les droits.");
         }
     }
-    
+
     public function creationValidation()
     {
         if (security::verifAccessSession()) {

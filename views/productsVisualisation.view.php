@@ -1,4 +1,7 @@
 <?php ob_start(); ?>
+<p>Catégorie 1 = Entrées</p>
+<p>Catégorie 2 = Plats</p>
+<p>Catégorie 3 = Desserts</p>
 
 <h2>Entrées</h2>
 <table class="table">

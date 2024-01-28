@@ -16,7 +16,6 @@ class reservationsController
     {
         if (security::verifAccessSession()) {
             $reservations = $this->reservationsManager->getReservations();
-            // print_r($reservations);
             require_once "views/reservationsVisualisation.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");
@@ -39,19 +38,12 @@ class reservationsController
 
     public function modification()
     {
-        if (
-            isset($_POST['reservation_id']) &&
-            isset($_POST['client_id']) &&
-            isset($_POST['date']) &&
-            isset($_POST['time']) &&
-            isset($_POST['comments'])
-        ) {
-            $reservation_id = intval($_POST['reservation_id']);
-            $client_id = intval($_POST['client_id']);
-            $date = filter_var($_POST['date']);
-            $time = filter_var($_POST['time']);
-            $comments = filter_var($_POST['comments']);
-
+        if (security::verifAccessSession()) {
+            $reservation_id = (int) security::secureHTML($_POST['reservation_id']);
+            $client_id = security::secureHTML($_POST['client_id']);
+            $date = security::secureHTML($_POST['date']);
+            $time = security::secureHTML($_POST['time']);
+            $comments = security::secureHTML($_POST['comments']);
 
             if (!$reservation_id) {
                 throw new Exception("Les données envoyées sont incorrectes : reservation_id doit être un entier valide.");
@@ -95,7 +87,6 @@ class reservationsController
                 "type" => "alert-success"
             ];
             header("Location: " . URL . "back/reservations/visualisation");
-            // var_dump($_POST);
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }
