@@ -149,8 +149,6 @@ class APIController
         Model::sendJSON(['isRestaurantFull' => $totalReserved + $number_of_people > 30]);
     }
 
-
-
     //*****************************************************************************
     //To get messages from contact page********************************************
     public function sendMessage()
