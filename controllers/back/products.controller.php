@@ -39,7 +39,7 @@ class productsController
     public function modification()
     {
         if (security::verifAccessSession()) {
-            $product_id = (int)security::secureHTML($_POST['product_id']);
+            $product_id = security::secureHTML($_POST['product_id']);
             $title = security::secureHTML($_POST['title']);
             $content = security::secureHTML($_POST['content']);
             $prix = security::secureHTML($_POST['prix']);
@@ -66,21 +66,30 @@ class productsController
     }
     public function creationValidation()
     {
-        if (security::verifAccessSession()) {
-            $title = security::secureHTML($_POST['title']);
-            $content = security::secureHTML($_POST['content']);
-            $prix = security::secureHTML($_POST['prix']);
-            $category_id = security::secureHTML($_POST['category_id']);
+        try {
+            if (security::verifAccessSession()) {
+                $title = security::secureHTML($_POST['title']);
+                $content = security::secureHTML($_POST['content']);
+                $prix = (int)security::secureHTML($_POST['prix']);
+                $category_id = (int)security::secureHTML($_POST['category_id']);
 
-            $product_id =  $this->productsManager->createProduct($title, $content, $prix, $category_id);
+                $product_id =  $this->productsManager->createProduct($title, $content, $prix, $category_id);
 
+                $_SESSION['alert'] = [
+                    "message" => "Le plat à été créé avec l'identifiant :" . $product_id,
+                    "type" => "alert-success"
+                ];
+                header("Location: " . URL . "back/products/visualisation");
+                // var_dump($_POST);
+            } else {
+                throw new Exception("Vous n'avez pas les droits.");
+            }
+        } catch (Exception $e) {
             $_SESSION['alert'] = [
-                "message" => "Le plat à été créé avec l'identifiant :" . $product_id,
-                "type" => "alert-success"
+                "message" => "Une erreur s'est produite : " . $e->getMessage(),
+                "type" => "alert-danger"
             ];
             header("Location: " . URL . "back/products/visualisation");
-        } else {
-            throw new Exception("Vous n'avez pas les droits.");
         }
     }
 }

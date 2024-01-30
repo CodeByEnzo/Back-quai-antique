@@ -1,8 +1,6 @@
 <?php
 session_start();
 
-define("URL", str_replace("index.php", "", (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
-
 require_once "controllers/front/API.controller.php";
 require_once "controllers/back/admin.controller.php";
 require_once "controllers/back/products.controller.php";
@@ -27,6 +25,8 @@ $gallerysController = new GallerysController();
 $clientsController = new clientsController();
 $diagController = new diagController();
 
+define("URL", str_replace("index.php", "", (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
+
 try {
     if (empty($_GET['page'])) {
         throw new Exception("La page n'éxiste pas");
@@ -35,7 +35,6 @@ try {
         if (empty($url[0]) || empty($url[1])) {
             throw new Exception("La page demandé n'éxiste pas");
         }
-
 
         switch ($url[0]) {
             case "front":

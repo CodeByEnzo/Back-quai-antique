@@ -47,8 +47,8 @@ class ProductsManager extends Model
 
     public function createProduct($title, $content, $prix, $category_id)
     {
-        $req = "INSERT INTO products (title, content, prix, category_id, product_image)
-        VALUES (:title, :content, :prix, :category_id, :product_image)";
+        $req = "INSERT INTO products (title, content, prix, category_id)
+        VALUES (:title, :content, :prix, :category_id) ";
         $stmt = $this->getBdd()->prepare($req);
         $stmt->bindValue(":title", $title, PDO::PARAM_STR);
         $stmt->bindValue(":content", $content, PDO::PARAM_STR);
