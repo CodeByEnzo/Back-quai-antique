@@ -13,6 +13,15 @@ class APIManager extends Model
         $stmt->closeCursor();
         return $products;
     }
+    public function getDBBanner()
+    {
+        $req = "SELECT * FROM banner";
+        $stmt = $this->getBdd()->prepare($req);
+        $stmt->execute();
+        $banner = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+        return $banner;
+    }
     public function getDBGallery()
     {
         $req = "SELECT * FROM gallerys";

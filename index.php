@@ -8,6 +8,7 @@ require_once "controllers/back/gallerys.controller.php";
 require_once "controllers/back/clients.controller.php";
 require_once "controllers/front/Login.controller.php";
 require_once "controllers/front/user.controller.php";
+require_once "controllers/back/banner.controller.php";
 require_once "controllers/back/reservations.controller.php";
 require_once "controllers/back/hours.controller.php";
 require_once "controllers/back/companyInfo.controller.php";
@@ -22,6 +23,7 @@ $apiController = new APIController();
 $adminController = new AdminController();
 $productsController = new ProductsController();
 $gallerysController = new GallerysController();
+$bannerController = new bannerController();
 $clientsController = new clientsController();
 $diagController = new diagController();
 
@@ -54,6 +56,9 @@ try {
                         break;
                     case "products":
                         $apiController->getProducts();
+                        break;
+                    case "banner":
+                        $apiController->getBanner();
                         break;
                     case "companyInfo":
                         $apiController->getCompanyInfo();
@@ -231,6 +236,27 @@ try {
                                 break;
                             case "validationDelete":
                                 $diagController->delete();
+                                break;
+                            default:
+                                throw new Exception("La page n'existe pas");
+                        }
+                        break;
+                    case "banner":
+                        switch ($url[2]) {
+                            case "visualisation":
+                                $bannerController->visualisation();
+                                break;
+                            case "validationModification":
+                                $bannerController->modification();
+                                break;
+                            case "creation":
+                                $bannerController->creationTemplate();
+                                break;
+                            case "creationValidation":
+                                $bannerController->creationValidation();
+                                break;
+                            case "validationDelete":
+                                $bannerController->delete();
                                 break;
                             default:
                                 throw new Exception("La page n'existe pas");

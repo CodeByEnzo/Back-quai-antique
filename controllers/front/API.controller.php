@@ -37,6 +37,22 @@ class APIController
         }
         return $tab;
     }
+    //*************************************************************
+    //API controller to show restaurant's menu*********************
+    public function getBanner()
+    {
+        $banner = $this->apiManager->getDBBanner();
+        Model::sendJSON($this->formatDataBanner($banner));
+    }
+    private function formatDataBanner($banner)
+    {
+        return [
+            "ID" => $banner['ID'],
+            "Name" => html_entity_decode($banner['Name']),
+            "AltText" => html_entity_decode($banner['AltText']),
+            "Image" => URL . "public/images/" . $banner['Image']
+        ];
+    }
 
     //*******************************************************************
     // API controller to display pictures on home page*******************
@@ -54,8 +70,6 @@ class APIController
                     "gallery_id" => $line['gallery_id'],
                     "gallery_title" => html_entity_decode($line['gallery_title']),
                     "gallery_content" => html_entity_decode($line['gallery_content']),
-
-
                     "gallery_img" => URL . "public/images/" . $line['gallery_img']
                 ];
             }
