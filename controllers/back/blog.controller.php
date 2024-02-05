@@ -1,30 +1,35 @@
 <?php
 
-require_once "./models/back/diag.manager.php";
+require_once "./models/back/blog.manager.php";
 require_once "./controllers/back/Security.class.php";
 require_once "./controllers/back/utile.php";
 
-class DiagController
+class blogController
 {
-    private $diagManager;
+    private $blogManager;
 
     public function __construct()
     {
-        $this->diagManager = new DiagManager();
+        $this->blogManager = new blogManager();
     }
 
     public function visualisation()
     {
         if (security::verifAccessSession()) {
-            $questions = $this->diagManager->getQuestions();
-            foreach ($questions as $index => $question) {
-                $questions[$index]['answers'] = $this->diagManager->getAnswersForQuestion($question['id']);
+            $articles = $this->blogManager->getArticles();
+
+            // Pour chaque article, récupérez les blocs associés
+            foreach ($articles as &$article) {
+                $blocs = $this->blogManager->getBlocsOfArticle($article['id']);
+                $article['blocs'] = $blocs;
             }
-            require_once "views/diagVisualisation.view.php";
+
+            require_once "views/blogVisualisation.view.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }
     }
+
     public function delete()
     {
         if (security::verifAccessSession()) {
@@ -36,14 +41,14 @@ class DiagController
                     "type" => "alert-success"
                 ];
 
-                $this->diagManager->deleteQuestion($id);
-                header('Location: ' . URL . 'back/diag/visualisation');
+                $this->blogManager->deleteQuestion($id);
+                header('Location: ' . URL . 'back/blog/visualisation');
             } else {
                 $_SESSION['alert'] = [
                     "message" => "Erreur lors de la suppression de la question",
                     "type" => "alert-danger"
                 ];
-                header('Location: ' . URL . 'back/diag/visualisation');
+                header('Location: ' . URL . 'back/blog/visualisation');
             }
         } else {
             throw new Exception("Vous n'avez pas les droits.");
@@ -61,24 +66,21 @@ class DiagController
                 throw new Exception("Les données envoyées sont incorrectes : question_id doit être un entier valide et question ne peut pas être vide.");
             }
 
-            $this->diagManager->updateDiag($id, $answers, $question, $multipleAnswers);
+            $this->blogManager->updateblog($id, $answers, $question, $multipleAnswers);
             $_SESSION['alert'] = [
-                "message" => "Le diagnostic a été modifié",
+                "message" => "Le blognostic a été modifié",
                 "type" => "alert-success"
             ];
-            header("Location: " . URL . "back/diag/visualisation");
+            header("Location: " . URL . "back/blog/visualisation");
         } else {
             throw new Exception("Les données envoyées sont incorrectes : question_id, question_text et answers doivent être définis.");
         }
     }
 
-
-
     public function creationTemplate()
     {
         if (security::verifAccessSession()) {
-            $questions = $this->diagManager->getQuestions();
-            require_once "views/diagCreation.view.php";
+            require_once "views/blogCreation.view.php";
         } else {
             throw new Exception("Vous n'avez pas les droits.");
         }
@@ -93,7 +95,7 @@ class DiagController
             if (empty($questionText)) {
                 throw new Exception("La question ne peut pas être vide.");
             }
-            $questionId = $this->diagManager->createQuestion($questionText, $multipleAnswers);
+            $questionId = $this->blogManager->createQuestion($questionText, $multipleAnswers);
 
             if (!$questionId) {
                 throw new Exception("La création de la question a échoué.");
@@ -107,7 +109,7 @@ class DiagController
                 foreach ($answers as $answer) {
                     $answerText = security::secureHTML($answer['answer_text']);
 
-                    $this->diagManager->createAnswer($questionId, $answerKey, $answerText);
+                    $this->blogManager->createAnswer($questionId, $answerKey, $answerText);
 
                     $answerKey++;
                 }
@@ -116,7 +118,7 @@ class DiagController
                     "message" => "La question et ses réponses ont été créées avec succès.",
                     "type" => "alert-success"
                 ];
-                header("Location: " . URL . "back/diag/visualisation");
+                header("Location: " . URL . "back/blog/visualisation");
             } else {
                 throw new Exception("Aucune réponse valide n'a été fournie.");
             }
@@ -125,7 +127,7 @@ class DiagController
         }
     }
 
-    public function getDiagData()
+    public function getBlogData()
     {
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -133,14 +135,5 @@ class DiagController
         header("Access-Control-Allow-Credentials: true");
         header("Content-Type: application/json");
         header('Access-Control-Max-Age: 86400');
-
-        $questions = $this->diagManager->getQuestions();
-
-        // Pour chaque question, récupérez les réponses correspondantes
-        foreach ($questions as &$question) {
-            $question['answers'] = $this->diagManager->getAnswersForQuestion($question['id']);
-        }
-
-        Model::sendJSON($questions);
     }
 }

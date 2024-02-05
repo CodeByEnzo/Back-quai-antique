@@ -1,19 +1,19 @@
 <?php ob_start(); ?>
 <main class="container-fluid mb-5 row d-flex justify-content-center align-items-center ">
 
-    <!-- <div class="card bg-dark shadow m-3 text-center col-12 col-sm-5 p-2">
-        <h3 class="mt-4 text-light">Gaby Diagnostic</h3>
-        <a class="mt-2 text-decoration-none" href="<?= URL ?>back/diag/visualisation">
+    <div class="card bg-dark shadow m-3 text-center col-12 col-sm-5 p-2">
+        <h3 class="mt-4 text-light">Blog</h3>
+        <a class="mt-2 text-decoration-none" href="<?= URL ?>back/blog/visualisation">
             <button class="btn btn-warning">
-                Modifier le diagnostic
+                Modifier les articles
             </button>
         </a>
-        <a class="mt-2 text-decoration-none" href="<?= URL ?>back/diag/creation">
+        <a class="mt-2 text-decoration-none" href="<?= URL ?>back/blog/creation">
             <button class="btn btn-warning">
-                Ajouter une Question
+                Ajouter un article
             </button>
         </a>
-    </div> -->
+    </div>
 
     <div class="card bg-dark shadow m-3 text-center col-12 col-sm-5 p-2">
         <h3 class="mt-4 text-light">La carte</h3>

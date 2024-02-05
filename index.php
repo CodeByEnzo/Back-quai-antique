@@ -12,7 +12,7 @@ require_once "controllers/back/banner.controller.php";
 require_once "controllers/back/reservations.controller.php";
 require_once "controllers/back/hours.controller.php";
 require_once "controllers/back/companyInfo.controller.php";
-require_once "controllers/back/diag.controller.php";
+require_once "controllers/back/blog.controller.php";
 
 $companyInfoController = new companyInfoController;
 $hoursController = new hoursController();
@@ -25,7 +25,7 @@ $productsController = new ProductsController();
 $gallerysController = new GallerysController();
 $bannerController = new bannerController();
 $clientsController = new clientsController();
-$diagController = new diagController();
+$blogController = new blogController();
 
 define("URL", str_replace("index.php", "", (isset($_SERVER['HTTPS']) ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[PHP_SELF]"));
 
@@ -90,9 +90,8 @@ try {
                     case "updateReservation":
                         $UserController->UpdateReservation();
                         break;
-                        //Gaby-------------------------------------------
-                    case "getDiagData":
-                        $diagController->getDiagData();
+                    case "getBlogData":
+                        $blogController->getBlogData();
                         break;
                     default:
                         throw new Exception("La page n'éxiste pas");
@@ -220,22 +219,22 @@ try {
                                 throw new Exception("La page n'existe pas");
                         }
                         break;
-                    case "diag":
+                    case "blog":
                         switch ($url[2]) {
                             case "visualisation":
-                                $diagController->visualisation();
+                                $blogController->visualisation();
                                 break;
                             case "validationModification":
-                                $diagController->modification();
+                                $blogController->modification();
                                 break;
                             case "creation":
-                                $diagController->creationTemplate();
+                                $blogController->creationTemplate();
                                 break;
                             case "creationValidation":
-                                $diagController->creationValidation();
+                                $blogController->creationValidation();
                                 break;
                             case "validationDelete":
-                                $diagController->delete();
+                                $blogController->delete();
                                 break;
                             default:
                                 throw new Exception("La page n'existe pas");

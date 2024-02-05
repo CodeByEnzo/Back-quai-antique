@@ -1,18 +1,30 @@
 <?php
 require_once "models/Model.php";
 
-class DiagManager extends Model
+class blogManager extends Model
 {
-    public function getQuestions()
+    public function getArticles()
     {
-        $query = "SELECT id, question_text, multipleAnswers FROM questions";
-        $stmt = $this->getBdd()->prepare($query);
-        $stmt->execute();
-        $questions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $query = "SELECT * FROM articles";
+        $stmt = $this->getBdd()->query($query);
+        $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->closeCursor();
 
-        return $questions;
+        return $articles;
     }
+    public function getBlocsOfArticle($article_id)
+    {
+        $blocs = array();
+        $articleId = (int)$article_id;
+        $query = "SELECT * FROM blocs WHERE article_id = ? ORDER BY order_index";
+        $stmt = $this->getBdd()->prepare($query);
+        $stmt->execute([$article_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->closeCursor();
+
+        return $result;
+    }
+
     public function getAnswersForQuestion($questionId)
     {
         $query = "SELECT answer_key, answer_text FROM answers WHERE question_id = :id";
@@ -44,7 +56,7 @@ class DiagManager extends Model
     }
 
 
-    public function updateDiag($id, $answers, $questionText, $multipleAnswers)
+    public function updateBlog($id, $answers, $questionText, $multipleAnswers)
     {
         try {
             //START
@@ -70,7 +82,7 @@ class DiagManager extends Model
         } catch (PDOException $e) {
             // If error, cancel
             $this->getBdd()->rollBack();
-            throw new Exception("La mise à jour du diagnostic a échoué.");
+            throw new Exception("La mise à jour du blognostic a échoué.");
         }
     }
 

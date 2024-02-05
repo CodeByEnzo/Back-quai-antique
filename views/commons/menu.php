@@ -69,11 +69,11 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Diagnostic Gaby
+                            Blog
                         </a>
                         <ul class="dropdown-menu text-center">
-                            <li><a class="dropdown-item" href="<?= URL ?>back/diag/visualisation">Modifier</a></li>
-                            <li><a class="dropdown-item" href="<?= URL ?>back/diag/creation">Ajouter</a></li>
+                            <li><a class="dropdown-item" href="<?= URL ?>back/blog/visualisation">Modifier</a></li>
+                            <li><a class="dropdown-item" href="<?= URL ?>back/blog/creation">Ajouter</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

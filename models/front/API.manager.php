@@ -76,9 +76,6 @@ class APIManager extends Model
         $stmt->closeCursor();
         return $result['total_reserved'] ?? 0;
     }
-
-
-
     public function getDBCompanyInfo()
     {
         $req = "SELECT * FROM company_info";

@@ -1,9 +1,9 @@
 <?php ob_start(); ?>
 
-<form method="post" action="<?= URL ?>back/diag/creationValidation" enctype="multipart/form-data">
+<form method="post" action="<?= URL ?>back/blog/creationValidation" enctype="multipart/form-data">
     <div class="mb-3">
-        <label for="diag_content" class="form-label bg-warning p-2 rounded">Nouvelle question :</label>
-        <textarea class="form-control" id="diag_content" name="question_text"></textarea>
+        <label for="blog_content" class="form-label bg-warning p-2 rounded">Nouvelle question :</label>
+        <textarea class="form-control" id="blog_content" name="question_text"></textarea>
     </div>
     <div>
         <label for="multipleAnswers" class="form-label bg-warning p-2 rounded">Est-ce une question à choix multiples ?</label>
@@ -11,7 +11,7 @@
         <p class="d-inline">(Cochez la case si la question possède plusieurs réponses)</p>
     </div>
     <div class="mb-3" id="answersContainer">
-        <label for="diag_content" class="form-label bg-warning p-2 rounded">Nouvelle(s) réponse(s) :</label>
+        <label for="blog_content" class="form-label bg-warning p-2 rounded">Nouvelle(s) réponse(s) :</label>
         <div class="answer mb-3">
             <label for="answer_text" class="form-label">Réponse A</label>
             <textarea class="form-control" name="answers[0][answer_text]"></textarea>
@@ -52,5 +52,5 @@
 
 <?php
 $content = ob_get_clean();
-$title = "Ajouter une question";
+$title = "Ajouter un article";
 require "views/commons/template.php";
